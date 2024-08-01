@@ -1,17 +1,26 @@
 package osrs.dev;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import lombok.SneakyThrows;
 import osrs.dev.client.Loader;
 import osrs.dev.modder.Modder;
-import osrs.dev.ui.ClientFrame;
+import osrs.dev.ui.ODClientFrame;
 import osrs.dev.util.JagConfigUtil;
+
+import javax.swing.*;
 
 public class Main {
     private static JagConfigUtil config;
     public static void main(String[] args) throws Exception {
+        FlatDarkLaf.setup();
         config = new JagConfigUtil(60);
         Modder.mod(config.getGamePack());
-        Loader loader = new Loader(config.getAppletParameters(), config.getGameParameters());
-        loader.run();
-        new ClientFrame(loader.getApplet());
+        SwingUtilities.invokeLater(ODClientFrame::new);
+    }
+
+    @SneakyThrows
+    public static Loader getLoader()
+    {
+        return new Loader(config);
     }
 }

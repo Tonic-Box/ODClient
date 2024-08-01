@@ -3,18 +3,14 @@ package osrs.dev.modder;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.Modifier;
-import java.util.HashMap;
-import java.util.Map;
+import osrs.dev.modder.model.Mappings;
 
 public class Mapper
 {
-    private static final Map<String,String> classMapping = new HashMap<>();
-    private static final Map<String,String> fieldMapping = new HashMap<>();
-    private static final Map<String,MethodMapping> methodMapping = new HashMap<>();
 
     public static void map()
     {
-        for(CtClass clazz : Modder.getClasses())
+        for(CtClass clazz : Mappings.getClasses())
         {
             clazz.defrost();
             findClient(clazz);
@@ -27,15 +23,13 @@ public class Mapper
         {
             if(!clazz.getName().equals("client"))
                 return;
-
-            classMapping.put("Client", clazz.getName());
+            Mappings.addClass("Client", clazz.getName());
 
             CtClass gameEngine = clazz.getSuperclass();
-            classMapping.put("GameEngine", gameEngine.getName());
+            Mappings.addClass("GameEngine", gameEngine.getName());
             findGraphicsTick(gameEngine);
         }
         catch (Exception ignored) {
-            ignored.printStackTrace();
         }
 
     }
@@ -61,7 +55,7 @@ public class Mapper
             if(length < 420 || length > 475)
                 continue;
 
-            methodMapping.put("graphicsTick", new MethodMapping("graphicsTick", method.getName(), clazz.getName(), method.getSignature(), -1));
+            Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor(), method.getModifiers());
         }
     }
 }

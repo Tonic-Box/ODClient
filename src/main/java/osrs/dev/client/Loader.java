@@ -3,8 +3,8 @@ package osrs.dev.client;
 import javassist.CtClass;
 import lombok.Getter;
 import lombok.Setter;
-import osrs.dev.modder.Modder;
-
+import osrs.dev.modder.model.Mappings;
+import osrs.dev.util.JagConfigUtil;
 import java.applet.Applet;
 import java.awt.*;
 import java.net.MalformedURLException;
@@ -12,21 +12,20 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
-public class Loader extends ClientLoader
+public class Loader extends Stub
 {
     @Getter
     @Setter
     private OSClassLoader osClassLoader;
-    private final int GAME_FIXED_WIDTH = 765;
-    private final int GAME_FIXED_HEIGHT = 503;
-    private final Dimension GAME_FIXED_SIZE = new Dimension(GAME_FIXED_WIDTH, GAME_FIXED_HEIGHT);
+    private final Dimension GAME_FIXED_SIZE;
     private final HashMap<String,String> appletParameters = new HashMap<>();
-    public Loader(HashMap<String,String> appletParameters, HashMap<String,String> gameParameters) throws Exception
+    public Loader(JagConfigUtil config) throws Exception
     {
-        this.osClassLoader = new OSClassLoader(Modder.getClasses(), "ODClient");
-        this.appletParameters.putAll(appletParameters);
-        this.gameParameters.putAll(gameParameters);
+        this.osClassLoader = new OSClassLoader(Mappings.getClasses(), "ODClient");
+        this.appletParameters.putAll(config.getAppletParameters());
+        this.gameParameters.putAll(config.getGameParameters());
         String mainClass = this.appletParameters.get("initial_class");
+        this.GAME_FIXED_SIZE = config.getAppletMinDimension();
         if(mainClass == null)
         {
             return;
@@ -38,14 +37,15 @@ public class Loader extends ClientLoader
 
     public void run() {
         System.setProperty("jagex.disableBouncyCastle", "true");
-        this.applet.resize(GAME_FIXED_WIDTH, GAME_FIXED_HEIGHT);
+        this.applet.resize(GAME_FIXED_SIZE);
         this.applet.setPreferredSize(GAME_FIXED_SIZE);
         this.applet.setMinimumSize(GAME_FIXED_SIZE);
         this.applet.init();
+        this.applet.start();
     }
 
     @Override
-    public void Shutdown() throws Exception {
+    public void Shutdown() {
 
     }
 

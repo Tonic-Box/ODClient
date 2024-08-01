@@ -1,19 +1,12 @@
 package osrs.dev.modder;
 
 import javassist.ClassPool;
-import javassist.CtClass;
-import lombok.Getter;
-
-import java.util.ArrayList;
+import osrs.dev.modder.model.Mappings;
 import java.util.Collections;
-import java.util.List;
 import java.util.jar.JarFile;
 
 public class Modder
 {
-    @Getter
-    private static final List<CtClass> classes = new ArrayList<>();
-
     public static void mod(JarFile jar)
     {
         Collections.list(jar.entries())
@@ -29,8 +22,9 @@ public class Modder
                         throw new RuntimeException(ex);
                     }
                 })
-                .forEach(classes::add);
+                .forEach(clazz -> Mappings.getClasses().add(clazz));
 
         Mapper.map();
+        Injector.inject();
     }
 }

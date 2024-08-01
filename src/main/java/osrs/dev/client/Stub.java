@@ -8,7 +8,7 @@ import java.applet.AppletStub;
 import java.net.URL;
 import java.util.HashMap;
 
-public abstract class ClientLoader implements AppletStub {
+public abstract class Stub implements AppletStub {
     @Getter
     protected Applet applet;
     protected HashMap<String,String> gameParameters = new HashMap<>();

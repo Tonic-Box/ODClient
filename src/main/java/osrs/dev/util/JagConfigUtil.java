@@ -18,7 +18,6 @@ public class JagConfigUtil
 {
     protected final Map<String, String> config;
     protected final JarFile gamePack;
-    protected final Map<String,byte[]> classes;
     protected final HashMap<String, String> gameParameters = new HashMap<>();
     protected final HashMap<String, String> appletParameters = new HashMap<>();
 
@@ -26,7 +25,6 @@ public class JagConfigUtil
         config = readJavConfig(world);
         gamePack = fetchGamePack();
         filterParameters(world);
-        classes = JarUtil.extractClasses(gamePack);
     }
 
     private Map<String, String> readJavConfig(int world)
@@ -64,21 +62,11 @@ public class JagConfigUtil
         }
     }
 
-    protected Dimension getAppletMinDimension()
+    public Dimension getAppletMinDimension()
     {
         int width = Integer.parseInt(config.get("applet_minwidth"));
         int height = Integer.parseInt(config.get("applet_minheight"));
         return new Dimension(width, height);
-    }
-
-    protected String getInitialClass()
-    {
-        return config.get("initial_class");
-    }
-
-    protected int getRevision()
-    {
-        return Integer.parseInt(config.get("param25"));
     }
 
     public JarFile fetchGamePack() throws IOException {
