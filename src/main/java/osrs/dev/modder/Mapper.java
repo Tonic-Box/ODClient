@@ -1,6 +1,7 @@
 package osrs.dev.modder;
 
 import javassist.CtClass;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.Modifier;
 import osrs.dev.modder.model.Mappings;
@@ -14,6 +15,23 @@ public class Mapper
         {
             clazz.defrost();
             findClient(clazz);
+            findClientField(clazz);
+        }
+    }
+
+    private static void findClientField(CtClass clazz)
+    {
+        for(CtField field : clazz.getDeclaredFields())
+        {
+            try
+            {
+                if(field.getType().getName().equals("client"))
+                {
+                    Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor(), field.getModifiers());
+                    return;
+                }
+            }
+            catch (Exception ignored) {}
         }
     }
 

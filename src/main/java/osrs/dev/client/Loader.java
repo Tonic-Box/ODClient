@@ -3,6 +3,7 @@ package osrs.dev.client;
 import javassist.CtClass;
 import lombok.Getter;
 import lombok.Setter;
+import osrs.dev.api.RSClient;
 import osrs.dev.modder.model.Mappings;
 import osrs.dev.util.JagConfigUtil;
 import java.applet.Applet;
@@ -42,6 +43,11 @@ public class Loader extends Stub
         this.applet.setMinimumSize(GAME_FIXED_SIZE);
         this.applet.init();
         this.applet.start();
+    }
+
+    public RSClient getApi()
+    {
+        return ((RSClient) applet).getClient();
     }
 
     @Override
