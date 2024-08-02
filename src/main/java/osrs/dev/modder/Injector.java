@@ -209,14 +209,25 @@ public class Injector
             break;
         }
 
-        if(targetMethod == null)
-            return;
-
         injectMethod(target, method);
         target.defrost();
 
         String ret = getReturn(method);
-        targetMethod.insertBefore("if(" + method.getName() + "()) { return " + ret + "; }");
+
+        StringBuilder args = new StringBuilder("(");
+
+        int length = method.getParameterTypes().length;
+        for(int i = 1; i <= length; i++)
+        {
+            args.append("$").append(i).append(",");
+        }
+
+        if(args.toString().endsWith(","))
+        {
+            args = new StringBuilder(args.substring(0, args.length() - 1));
+        }
+
+        targetMethod.insertBefore("if(" + method.getName() + args.toString() + ")) { return " + ret + "; }");
     }
 
     public static void injectMethod(CtClass target, CtMethod method) throws Exception

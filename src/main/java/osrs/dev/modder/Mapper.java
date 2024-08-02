@@ -4,6 +4,7 @@ import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
 import javassist.Modifier;
+import javassist.bytecode.MethodInfo;
 import osrs.dev.modder.model.Mappings;
 
 public class Mapper
@@ -16,6 +17,7 @@ public class Mapper
             clazz.defrost();
             findClient(clazz);
             findClientField(clazz);
+            findDoAction(clazz);
         }
     }
 
@@ -74,6 +76,24 @@ public class Mapper
                 continue;
 
             Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor(), method.getModifiers());
+        }
+    }
+
+    private static void findDoAction(CtClass clazz)
+    {
+        for(CtMethod method : clazz.getDeclaredMethods())
+        {
+            MethodInfo info = method.getMethodInfo2();
+            if(!info.getDescriptor().startsWith("(IIIIIILjava/lang/String;Ljava/lang/String;II") || !info.getDescriptor().endsWith(")V"))
+                continue;
+
+            if(info.getCodeAttribute().getCodeLength() < 5000)
+                continue;
+
+            if(method.getName().length() > 2)
+                continue;
+
+            Mappings.addMethod("menuAction", method.getName(), clazz.getName(), info.getDescriptor(), method.getModifiers());
         }
     }
 }
