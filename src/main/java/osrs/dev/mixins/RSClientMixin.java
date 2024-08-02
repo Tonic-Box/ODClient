@@ -27,13 +27,6 @@ public abstract class RSClientMixin implements RSClient
     }
 
     @Shadow("clientField")
-    public static RSClient getC() {
-        return null;
-    }
-
-    @Inject
     @Override
-    public RSClient getClient() {
-        return getC();
-    }
+    public abstract RSClient getClient();
 }

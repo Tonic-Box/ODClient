@@ -1,11 +1,16 @@
 package osrs.dev.ui;
 
 import osrs.dev.Main;
+import osrs.dev.annotations.Subscribe;
+import osrs.dev.api.RSClient;
 import osrs.dev.client.Loader;
 import osrs.dev.util.ClientManager;
 import osrs.dev.util.ImageUtil;
 import osrs.dev.util.Logger;
 import osrs.dev.util.ThreadPool;
+import osrs.dev.util.eventbus.EventBus;
+import osrs.dev.util.eventbus.events.MenuOptionClicked;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -18,13 +23,15 @@ import java.awt.image.BufferedImage;
 public class ODClientFrame extends JFrame {
 
     private final JTabbedPane tabbedPane;
-    private final JTextPane loggerPane;
+    private boolean logMenuActions = false;
 
     public ODClientFrame() {
         setTitle("[ODClient] An Example OSRS Client");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 750);
         setLayout(new BorderLayout());
+
+        EventBus.register(this);
 
         BufferedImage icon = ImageUtil.loadImageResource(ODClientFrame.class, "pixal_bot.png");
         setIconImage(icon);
@@ -35,7 +42,7 @@ public class ODClientFrame extends JFrame {
         tabbedPane.addChangeListener(new TabChangeListener());
         add(tabbedPane, BorderLayout.CENTER);
 
-        loggerPane = makeLoggerArea();
+        JTextPane loggerPane = makeLoggerArea();
         Logger.setInstance(loggerPane);
         JScrollPane scroll = new JScrollPane (loggerPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setAutoscrolls(true);
@@ -72,6 +79,14 @@ public class ODClientFrame extends JFrame {
             }
         });
         menuBar.add(addTabButton);
+
+        JMenu loggingMenu = new JMenu("Logging");
+        JCheckBoxMenuItem menuActionsCheckbox = new JCheckBoxMenuItem("MenuActions");
+        menuActionsCheckbox.setSelected(false);
+        menuActionsCheckbox.addActionListener(e -> logMenuActions = menuActionsCheckbox.isSelected());
+        loggingMenu.add(menuActionsCheckbox);
+        menuBar.add(loggingMenu);
+
         setJMenuBar(menuBar);
     }
 
@@ -155,5 +170,13 @@ public class ODClientFrame extends JFrame {
         {
             clientContainer.swapToFront();
         }
+    }
+
+    @Subscribe
+    public void onMenuOptionClicked(RSClient client, MenuOptionClicked event)
+    {
+        if(!logMenuActions)
+            return;
+        Logger.info("[" + client.getClientID() + "] target=" + event.getTarget() + ", option=" + event.getOption());
     }
 }
