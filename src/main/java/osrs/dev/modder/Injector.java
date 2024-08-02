@@ -224,10 +224,10 @@ public class Injector
 
         if(args.toString().endsWith(","))
         {
-            args = new StringBuilder(args.substring(0, args.length() - 1));
+            args.setLength(args.length() - 1);
         }
 
-        targetMethod.insertBefore("if(" + method.getName() + args.toString() + ")) { return " + ret + "; }");
+        targetMethod.insertBefore("if(" + method.getName() + args + ")) { return " + ret + "; }");
     }
 
     public static void injectMethod(CtClass target, CtMethod method) throws Exception
