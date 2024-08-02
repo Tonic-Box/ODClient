@@ -6,6 +6,8 @@ import lombok.Setter;
 import osrs.dev.api.RSClient;
 import osrs.dev.modder.model.Mappings;
 import osrs.dev.util.JagConfigUtil;
+import osrs.dev.util.Profiler;
+
 import java.applet.Applet;
 import java.awt.*;
 import java.net.MalformedURLException;
@@ -20,6 +22,8 @@ public class Loader extends Stub
     private OSClassLoader osClassLoader;
     private final Dimension GAME_FIXED_SIZE;
     private final HashMap<String,String> appletParameters = new HashMap<>();
+    @Getter
+    private boolean shuttingDown = false;
     public Loader(JagConfigUtil config) throws Exception
     {
         this.osClassLoader = new OSClassLoader(Mappings.getClasses(), "ODClient");
@@ -52,7 +56,26 @@ public class Loader extends Stub
 
     @Override
     public void Shutdown() {
+        shuttingDown = true;
+        Profiler profiler = Profiler.start("ShutDown Applet");
+        appletParameters.clear();
+        gameParameters.clear();
+        getApi().setShouldExit(true);
+        try { Thread.sleep(1000); } catch (Exception ignored) { }
+        gameParameters = null;
+        applet = null;
+        osClassLoader = null;
+        profiler.stopMS();
+    }
 
+    @Override
+    protected void finalize()
+    {
+        try {
+            super.finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override

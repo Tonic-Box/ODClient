@@ -30,4 +30,20 @@ public class ClientContainer extends JPanel
         ClientManager.setCurrentClient(clientID);
         System.out.println("Swapped to: " + clientID);
     }
+
+    public void shutdown()
+    {
+        ClientManager.getClients().removeIf(c -> c.getClientID().equals(clientID));
+        try
+        {
+            loader.Shutdown();
+        }
+        catch (RuntimeException ignored) {}
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        System.gc();
+        System.runFinalization();
+    }
 }

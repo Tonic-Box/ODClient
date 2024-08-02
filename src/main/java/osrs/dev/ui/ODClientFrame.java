@@ -2,7 +2,9 @@ package osrs.dev.ui;
 
 import osrs.dev.Main;
 import osrs.dev.client.Loader;
+import osrs.dev.util.ClientManager;
 import osrs.dev.util.ImageUtil;
+import osrs.dev.util.ThreadPool;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -74,6 +76,8 @@ public class ODClientFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int index = tabbedPane.indexOfComponent(panel);
                 if (index != -1) {
+                    ClientContainer container = (ClientContainer) tabbedPane.getComponentAt(index);
+                    ThreadPool.submit(container::shutdown);
                     tabbedPane.remove(index);
                 }
             }
@@ -111,6 +115,11 @@ public class ODClientFrame extends JFrame {
                     // Perform the desired action with clientContainer
                     handleClientContainer(clientContainer);
                 }
+            }
+            else
+            {
+                ClientManager.setCurrentClient(null);
+                System.out.println("Swapped to: null");
             }
         }
 
