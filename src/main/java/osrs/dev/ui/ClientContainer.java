@@ -27,6 +27,8 @@ public class ClientContainer extends JPanel
 
     public void swapToFront()
     {
+        if(clientID.equals(ClientManager.getCurrentClient()))
+            return;
         ClientManager.setCurrentClient(clientID);
         System.out.println("Swapped to: " + clientID);
     }

@@ -5,7 +5,6 @@ import osrs.dev.client.Loader;
 import osrs.dev.util.ClientManager;
 import osrs.dev.util.ImageUtil;
 import osrs.dev.util.ThreadPool;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
