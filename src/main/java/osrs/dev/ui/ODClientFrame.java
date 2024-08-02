@@ -4,10 +4,12 @@ import osrs.dev.Main;
 import osrs.dev.client.Loader;
 import osrs.dev.util.ClientManager;
 import osrs.dev.util.ImageUtil;
+import osrs.dev.util.Logger;
 import osrs.dev.util.ThreadPool;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,11 +18,12 @@ import java.awt.image.BufferedImage;
 public class ODClientFrame extends JFrame {
 
     private final JTabbedPane tabbedPane;
+    private final JTextPane loggerPane;
 
     public ODClientFrame() {
         setTitle("[ODClient] An Example OSRS Client");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(800, 750);
         setLayout(new BorderLayout());
 
         BufferedImage icon = ImageUtil.loadImageResource(ODClientFrame.class, "pixal_bot.png");
@@ -31,6 +34,16 @@ public class ODClientFrame extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.addChangeListener(new TabChangeListener());
         add(tabbedPane, BorderLayout.CENTER);
+
+        loggerPane = makeLoggerArea();
+        Logger.setInstance(loggerPane);
+        JScrollPane scroll = new JScrollPane (loggerPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll.setAutoscrolls(true);
+        scroll.setPreferredSize(new Dimension(800, 150));
+        scroll.setMinimumSize(new Dimension(800, 150));
+        scroll.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        add(loggerPane, BorderLayout.SOUTH);
 
         setVisible(true);
     }
@@ -60,6 +73,22 @@ public class ODClientFrame extends JFrame {
         });
         menuBar.add(addTabButton);
         setJMenuBar(menuBar);
+    }
+
+    private JTextPane makeLoggerArea()
+    {
+        JTextPane loggerPanel = new JTextPane() {{
+            setBackground(Color.BLACK);
+            setForeground(Color.LIGHT_GRAY);
+            setAutoscrolls(true);
+            setEditable(false);
+            setFont(new Font("Monoid", Font.PLAIN, 14));
+        }};
+        DefaultCaret caret = (DefaultCaret)loggerPanel.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        loggerPanel.setPreferredSize(new Dimension(800, 150));
+        loggerPanel.setMinimumSize(new Dimension(800, 150));
+        return loggerPanel;
     }
 
     private void addNewTab(String title, Loader loader) {
@@ -118,7 +147,7 @@ public class ODClientFrame extends JFrame {
             else
             {
                 ClientManager.setCurrentClient(null);
-                System.out.println("Swapped to: null");
+                Logger.info("Swapped to: null");
             }
         }
 

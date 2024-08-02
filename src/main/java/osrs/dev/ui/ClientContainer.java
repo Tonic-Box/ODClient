@@ -3,6 +3,7 @@ package osrs.dev.ui;
 import osrs.dev.api.RSClient;
 import osrs.dev.client.Loader;
 import osrs.dev.util.ClientManager;
+import osrs.dev.util.Logger;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -30,7 +31,7 @@ public class ClientContainer extends JPanel
         if(clientID.equals(ClientManager.getCurrentClient()))
             return;
         ClientManager.setCurrentClient(clientID);
-        System.out.println("Swapped to: " + clientID);
+        Logger.info("Swapped to: " + clientID);
     }
 
     public void shutdown()

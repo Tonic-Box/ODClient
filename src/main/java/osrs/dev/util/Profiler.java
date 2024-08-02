@@ -34,11 +34,13 @@ public class Profiler
      */
     public void stop()
     {
+        Logger.info("[" + task + "] Took " + Duration.between(startup, Instant.now()).getSeconds() + " seconds.");
         System.out.println("[" + task + "] Took " + Duration.between(startup, Instant.now()).getSeconds() + " seconds.");
     }
 
     public void stopMS()
     {
+        Logger.info("[" + task + "] Took " + Duration.between(startup, Instant.now()).toMillis() + " ms.");
         System.out.println("[" + task + "] Took " + Duration.between(startup, Instant.now()).toMillis() + " ms.");
     }
 }

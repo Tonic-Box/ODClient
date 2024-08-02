@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Implemented proper cleanup of closed client objects.">
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ClientContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ClientContainer.java" afterDir="false" />
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Smoothed out tab changed logic a bit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/Profiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/Profiler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722580082321</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Smoothed out tab changed logic a bit">
+      <option name="closed" value="true" />
+      <created>1722580657060</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1722580657060</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -151,6 +160,7 @@
     <MESSAGE value="mapps client field now. added prelude to a client manager." />
     <MESSAGE value="Added window icon. implemented usable api and a ClientManager that keeps track of the RSClient objects, and also which one is currently visible/tabbed in. Tabbed-out clients now no-op their rendering for cpu usage save." />
     <MESSAGE value="Implemented proper cleanup of closed client objects." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented proper cleanup of closed client objects." />
+    <MESSAGE value="Smoothed out tab changed logic a bit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Smoothed out tab changed logic a bit" />
   </component>
 </project>
