@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import osrs.dev.annotations.Inject;
 import osrs.dev.annotations.MethodHook;
 import osrs.dev.annotations.Mixin;
+import osrs.dev.annotations.Shadow;
+import osrs.dev.modder.model.MappedType;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
 import osrs.dev.util.Introspection;
@@ -108,6 +110,7 @@ public class Injector
             }
             catch (Exception ignored)
             {
+                ignored.printStackTrace();
             }
         }
 
@@ -127,6 +130,8 @@ public class Injector
             CtField newField = CtField.make(fieldModifiers + " " + fieldType + " " + fieldName + ";", target);
             target.addField(newField);
         }
+
+
     }
 
     private static void processMethod(CtClass target, CtMethod method) throws Exception {
@@ -139,6 +144,43 @@ public class Injector
         if(Introspection.has(method, MethodHook.class))
         {
             methodHook(target, method);
+        }
+
+        if(Introspection.has(method, Shadow.class))
+        {
+            shadow(target, method);
+        }
+    }
+
+    private static void shadow(CtClass target, CtMethod method) throws Exception
+    {
+        target.defrost();
+        String targName = ((Shadow) method.getAnnotation(Shadow.class)).value();
+        boolean isMethod = ((Shadow) method.getAnnotation(Shadow.class)).method();
+
+        if(isMethod)
+        {
+            //NYI
+        }
+        else
+        {
+            Mapping mapping = Mappings.findByTag(targName);
+            if(!mapping.getType().equals(MappedType.FIELD))
+                return;
+
+            CtMethod insert;
+            String clazz = mapping.getObfuscatedClass().equals(target.getName()) ? "" : mapping.getObfuscatedClass();
+            String body = "{ return " + clazz + "." + mapping.getObfuscatedName() + "; }";
+            if(Modifier.isStatic(method.getModifiers()))
+            {
+                insert = CtNewMethod.make("public static " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
+            }
+            else
+            {
+                insert = CtNewMethod.make("public " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
+            }
+
+            target.addMethod(insert);
         }
     }
 
@@ -174,7 +216,7 @@ public class Injector
         target.defrost();
 
         String ret = getReturn(method);
-        targetMethod.insertBefore("if(" + method.getName() + "();) { return " + ret + "; }");
+        targetMethod.insertBefore("if(" + method.getName() + "()) { return " + ret + "; }");
     }
 
     public static void injectMethod(CtClass target, CtMethod method) throws Exception

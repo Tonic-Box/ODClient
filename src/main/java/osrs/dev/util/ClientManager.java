@@ -6,13 +6,23 @@ import osrs.dev.api.RSClient;
 
 import java.util.ArrayList;
 import java.util.List;
-@Getter
 public class ClientManager
 {
+    @Getter
     private static List<RSClient> clients = new ArrayList<>();
 
-    @Setter
+    @Getter
     private static String currentClient = null;
+
+    public static void setCurrentClient(String clientId)
+    {
+        currentClient = clientId;
+
+        for(RSClient client : clients)
+        {
+            client.setDisableRender(!client.getClientID().equals(currentClient));
+        }
+    }
 
     public static RSClient getClient()
     {

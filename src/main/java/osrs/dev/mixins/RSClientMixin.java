@@ -2,6 +2,7 @@ package osrs.dev.mixins;
 
 import osrs.dev.annotations.Inject;
 import osrs.dev.annotations.Mixin;
+import osrs.dev.annotations.Shadow;
 import osrs.dev.api.RSClient;
 
 import java.util.UUID;
@@ -21,5 +22,16 @@ public abstract class RSClientMixin implements RSClient
             uid = UUID.randomUUID().toString();
         }
         return uid;
+    }
+
+    @Shadow("clientField")
+    public static RSClient getC() {
+        return null;
+    }
+
+    @Inject
+    @Override
+    public RSClient getClient() {
+        return getC();
     }
 }

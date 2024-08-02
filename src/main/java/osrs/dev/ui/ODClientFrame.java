@@ -2,12 +2,15 @@ package osrs.dev.ui;
 
 import osrs.dev.Main;
 import osrs.dev.client.Loader;
+import osrs.dev.util.ImageUtil;
 
 import javax.swing.*;
-import java.applet.Applet;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class ODClientFrame extends JFrame {
 
@@ -19,9 +22,13 @@ public class ODClientFrame extends JFrame {
         setSize(800, 600);
         setLayout(new BorderLayout());
 
+        BufferedImage icon = ImageUtil.loadImageResource(ODClientFrame.class, "pixal_bot.png");
+        setIconImage(icon);
+
         buildMenuBar();
 
         tabbedPane = new JTabbedPane();
+        tabbedPane.addChangeListener(new TabChangeListener());
         add(tabbedPane, BorderLayout.CENTER);
 
         setVisible(true);
@@ -55,10 +62,8 @@ public class ODClientFrame extends JFrame {
     }
 
     private void addNewTab(String title, Loader loader) {
-        JPanel panel = new JPanel(new BorderLayout());
-        Applet applet = loader.getApplet();
-        loader.run();
-        panel.add(applet, BorderLayout.CENTER);
+
+        ClientContainer panel = new ClientContainer(loader);
 
         JLabel closeButton = new JLabel("x");
         closeButton.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
@@ -92,5 +97,26 @@ public class ODClientFrame extends JFrame {
 
         tabbedPane.addTab(title, panel);
         tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, tabHeader);
+    }
+
+    private static class TabChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
+            int index = sourceTabbedPane.getSelectedIndex();
+            if (index != -1) {
+                Component selectedComponent = sourceTabbedPane.getComponentAt(index);
+                if (selectedComponent instanceof ClientContainer) {
+                    ClientContainer clientContainer = (ClientContainer) selectedComponent;
+                    // Perform the desired action with clientContainer
+                    handleClientContainer(clientContainer);
+                }
+            }
+        }
+
+        private void handleClientContainer(ClientContainer clientContainer)
+        {
+            clientContainer.swapToFront();
+        }
     }
 }

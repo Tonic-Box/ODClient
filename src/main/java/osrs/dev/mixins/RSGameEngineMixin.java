@@ -15,14 +15,6 @@ public abstract class RSGameEngineMixin implements RSClient
     @Inject
     public void setDisableRender(boolean bool)
     {
-        if(bool)
-        {
-            System.out.println("off");
-        }
-        else
-        {
-            System.out.println("On");
-        }
         disableRender = bool;
     }
 
