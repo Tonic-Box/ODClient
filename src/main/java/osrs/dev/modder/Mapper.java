@@ -150,7 +150,6 @@ public class Mapper
     {
         CtMethod init = clazz.getMethod("init", "()V");
         Mappings.addMethodNoGarbage("init", init.getName(), clazz.getName(), init.getMethodInfo2().getDescriptor(), init.getModifiers());
-
         MethodDefinition definition = new MethodDefinition(init);
         FieldLine fieldLine;
         for(CodeBlock block : definition.getBody())
@@ -182,7 +181,6 @@ public class Mapper
                 {
                     if(!block1.getBlockType().equals(BlockType.FIELD_STORE))
                         continue;
-
                     fieldLine = block1.findFirst(i -> i.getOpcode() == Opcode.PUTSTATIC);
                     Mappings.addField("JX_DISPLAY_NAME", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
                 }

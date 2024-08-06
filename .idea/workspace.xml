@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Little cleanup">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="UUID spoofing/caching per account">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/client/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/client/Loader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +204,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722929220744</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="UUID spoofing/caching per account">
+      <option name="closed" value="true" />
+      <created>1722973339983</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1722973339983</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -238,6 +240,7 @@
     <MESSAGE value="Implemented garbage scanning. Also implemented pre-processing to ensure we only considder the used methods in out mappings. Also added a fair bit of java doc'ing." />
     <MESSAGE value="implemented RSClient::invoke methods for iinvoking on client thread and also for getting return values from client thread" />
     <MESSAGE value="Little cleanup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Little cleanup" />
+    <MESSAGE value="UUID spoofing/caching per account" />
+    <option name="LAST_COMMIT_MESSAGE" value="UUID spoofing/caching per account" />
   </component>
 </project>

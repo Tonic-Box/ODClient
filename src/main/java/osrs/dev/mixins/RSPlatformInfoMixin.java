@@ -37,6 +37,7 @@ public abstract class RSPlatformInfoMixin
         return cachedDeviceId;
     }
 
+    @Inject
     private String getCachedUUID()
     {
         if (cachedUUIDProperties == null)
@@ -59,6 +60,7 @@ public abstract class RSPlatformInfoMixin
         return cachedUUIDProperties.getProperty(getClient().getUsername() != null && !getClient().getUsername().isEmpty() ? getClient().getUsername() : getClient().getCharacterId());
     }
 
+    @Inject
     private void writeCachedUUID(String UUID)
     {
         cachedUUIDProperties.setProperty(getClient().getUsername() != null && !getClient().getUsername().isEmpty() ? getClient().getUsername() : getClient().getCharacterId(), UUID);
