@@ -25,7 +25,15 @@ public interface RSClient extends RSGameEngine, AppletStub
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    future.complete(supplier.get());
+                    try
+                    {
+                        future.complete(supplier.get());
+                    }
+                    catch (Exception exception)
+                    {
+                        Logger.error("# [" + getClientID() + "] Error in invoked runnable");
+                        exception.printStackTrace();
+                    }
                 }
             };
             invoke(runnable);
