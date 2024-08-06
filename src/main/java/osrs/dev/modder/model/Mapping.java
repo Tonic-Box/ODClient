@@ -11,4 +11,7 @@ public class Mapping
     private final String descriptor;
     private final int modifiers;
     private final MappedType type;
+
+    private boolean done = false;
+    private GarbageValue garbage = null;
 }

@@ -19,6 +19,9 @@ public class Injector
     private static final String MIXINS = "osrs.dev.mixins";
     private static final String RSAPI = "osrs.dev.api";
 
+    /**
+     * Takes in outr mixins and uses them as instructions for modifying the gamepack
+     */
     public static void inject()
     {
         HashMap<CtClass,CtClass> pairs = Introspection.getPairs(MIXINS, RSAPI);

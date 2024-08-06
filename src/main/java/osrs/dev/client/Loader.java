@@ -15,6 +15,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class is used for loading and managing a client instance
+ */
 public class Loader extends Stub
 {
     @Getter
@@ -24,6 +27,12 @@ public class Loader extends Stub
     private final HashMap<String,String> appletParameters = new HashMap<>();
     @Getter
     private boolean shuttingDown = false;
+
+    /**
+     * create a new client loader
+     * @param config jagex config
+     * @throws Exception exception
+     */
     public Loader(JagConfigUtil config) throws Exception
     {
         this.osClassLoader = new OSClassLoader(Mappings.getClasses(), "ODClient");
@@ -40,6 +49,9 @@ public class Loader extends Stub
         this.applet.setStub(this);
     }
 
+    /**
+     * start up the game applet
+     */
     public void run() {
         System.setProperty("jagex.disableBouncyCastle", "true");
         this.applet.resize(GAME_FIXED_SIZE);
@@ -49,11 +61,18 @@ public class Loader extends Stub
         this.applet.start();
     }
 
+    /**
+     * get the game applet cast to our RSClient api interface
+     * @return api object
+     */
     public RSClient getApi()
     {
         return ((RSClient) applet).getClient();
     }
 
+    /**
+     * shutdown and cleanup the client instance
+     */
     @Override
     public void Shutdown() {
         shuttingDown = true;
@@ -69,16 +88,6 @@ public class Loader extends Stub
     }
 
     @Override
-    protected void finalize()
-    {
-        try {
-            super.finalize();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    }
-
-    @Override
     public URL getCodeBase() {
         try {
             return new URL(this.appletParameters.get("codebase"));
@@ -87,6 +96,9 @@ public class Loader extends Stub
         }
     }
 
+    /**
+     * The classloader for loading the applet instance
+     */
     @Getter
     public static class OSClassLoader extends ClassLoader
     {

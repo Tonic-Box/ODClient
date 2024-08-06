@@ -5,36 +5,49 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.Modifier;
 import javassist.bytecode.MethodInfo;
+import lombok.Getter;
 import osrs.dev.modder.model.Mappings;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Mapper
 {
-
+    /**
+     * handles finding our mappings
+     */
     public static void map()
     {
         for(CtClass clazz : Mappings.getClasses())
         {
             clazz.defrost();
             findClient(clazz);
-            findClientField(clazz);
-            findDoAction(clazz);
+
+            for(CtMethod method : clazz.getDeclaredMethods())
+            {
+                if(!Mappings.getUsedMethods().contains(method.getLongName()))
+                    continue;
+                findDoAction(method);
+            }
+
+            for(CtField field : clazz.getDeclaredFields())
+            {
+                findClientField(field);
+            }
         }
     }
 
-    private static void findClientField(CtClass clazz)
+    private static void findClientField(CtField field)
     {
-        for(CtField field : clazz.getDeclaredFields())
+        try
         {
-            try
+            if(field.getType().getName().equals("client"))
             {
-                if(field.getType().getName().equals("client"))
-                {
-                    Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor(), field.getModifiers());
-                    return;
-                }
+                Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor(), field.getModifiers());
+                return;
             }
-            catch (Exception ignored) {}
         }
+        catch (Exception ignored) {}
     }
 
     private static void findClient(CtClass clazz)
@@ -79,21 +92,15 @@ public class Mapper
         }
     }
 
-    private static void findDoAction(CtClass clazz)
+    private static void findDoAction(CtMethod method)
     {
-        for(CtMethod method : clazz.getDeclaredMethods())
-        {
-            MethodInfo info = method.getMethodInfo2();
-            if(!info.getDescriptor().startsWith("(IIIIIILjava/lang/String;Ljava/lang/String;II") || !info.getDescriptor().endsWith(")V"))
-                continue;
+        MethodInfo info = method.getMethodInfo2();
+        if(!info.getDescriptor().startsWith("(IIIIIILjava/lang/String;Ljava/lang/String;II") || !info.getDescriptor().endsWith(")V"))
+            return;
 
-            if(info.getCodeAttribute().getCodeLength() < 5000)
-                continue;
+        if(info.getCodeAttribute().getCodeLength() < 5000)
+            return;
 
-            if(method.getName().length() > 2)
-                continue;
-
-            Mappings.addMethod("menuAction", method.getName(), clazz.getName(), info.getDescriptor(), method.getModifiers());
-        }
+        Mappings.addMethod("menuAction", method.getName(), method.getDeclaringClass().getName(), info.getDescriptor(), method.getModifiers());
     }
 }

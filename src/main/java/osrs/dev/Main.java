@@ -18,6 +18,10 @@ public class Main {
         SwingUtilities.invokeLater(ODClientFrame::new);
     }
 
+    /**
+     * Launch a new client Loader instance
+     * @return client Loader object
+     */
     @SneakyThrows
     public static Loader getLoader()
     {
