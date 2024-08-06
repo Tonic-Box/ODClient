@@ -40,6 +40,13 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
     @Override
     public abstract RSClient getClient();
 
+    @Shadow("Login_username")
+    @Override
+    public abstract String getUsername();
+    @Shadow("JX_CHARACTER_ID")
+    @Override
+    public abstract String getCharacterId();
+
     @Shadow(value = "menuAction", method = true)
     @Override
     public abstract void doAction(int param0, int param1, int opcode, int identifier, int itemId, int worldViewId, String option, String target, int canvasX, int canvasY);

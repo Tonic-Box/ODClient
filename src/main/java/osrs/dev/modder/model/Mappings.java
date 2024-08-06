@@ -20,6 +20,7 @@ public class Mappings
 
     public static void addField(String name, String obfuscatedName, String obfuscatedClass, String descriptor, int modifiers)
     {
+        System.out.println("Found Field: " + name + " : <" + descriptor + "> " + obfuscatedClass + "." + obfuscatedName);
         mappings.add(new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, modifiers, MappedType.FIELD));
     }
 
@@ -39,6 +40,7 @@ public class Mappings
 
     public static void addClass(String name, String obfuscatedName)
     {
+        System.out.println("Found class: " + name);
         mappings.add(new Mapping(name, obfuscatedName, obfuscatedName, "", -1, MappedType.CLASS));
     }
 

@@ -2,10 +2,7 @@ package osrs.dev.modder;
 
 import javassist.*;
 import lombok.SneakyThrows;
-import osrs.dev.annotations.Inject;
-import osrs.dev.annotations.MethodHook;
-import osrs.dev.annotations.Mixin;
-import osrs.dev.annotations.Shadow;
+import osrs.dev.annotations.*;
 import osrs.dev.modder.model.MappedType;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
@@ -153,6 +150,51 @@ public class Injector
         if(Introspection.has(method, Shadow.class))
         {
             shadow(target, method);
+        }
+
+        if(Introspection.has(method, Replace.class))
+        {
+            replace(target, method);
+        }
+    }
+
+    private static void replace(CtClass target, CtMethod method) throws Exception
+    {
+        String replaceName = ((Replace) method.getAnnotation(Replace.class)).value();
+        Mapping mapping = Mappings.findByTag(replaceName);
+
+        CtMethod origMethod = mapping.getMethod();
+
+        CtClass[] origParams = origMethod.getParameterTypes();
+        CtClass[] replaceParams = method.getParameterTypes();
+
+        if (origParams.length != replaceParams.length)
+        {
+            if (replaceParams.length != (origParams.length - 1) && method.getParameterTypes().length != 0)
+            {
+                System.out.println("<Mixin> Failed to instrument replacement method '" + method.getName() + "'");
+                return;
+            }
+            if(method.getParameterTypes().length == 0)
+            {
+                for(CtClass ctClass : origParams)
+                {
+                    method.addParameter(ctClass);
+                }
+            }
+            else
+                method.addParameter(origParams[origParams.length - 1]);
+        }
+
+        CtMethod newMethod = CtNewMethod.copy(method, target, null);
+        target.addMethod(newMethod);
+
+        if (origMethod.getReturnType().getName().equals("void"))
+        {
+            origMethod.insertBefore("if(true) {" + newMethod.getName() + "($$); return;}");
+        } else
+        {
+            origMethod.insertBefore("if(true) { return (" + origMethod.getReturnType().getName() + ") " + newMethod.getName() + "($$);}");
         }
     }
 

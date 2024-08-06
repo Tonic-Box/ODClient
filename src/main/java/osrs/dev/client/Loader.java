@@ -53,12 +53,18 @@ public class Loader extends Stub
      * start up the game applet
      */
     public void run() {
-        System.setProperty("jagex.disableBouncyCastle", "true");
-        this.applet.resize(GAME_FIXED_SIZE);
-        this.applet.setPreferredSize(GAME_FIXED_SIZE);
-        this.applet.setMinimumSize(GAME_FIXED_SIZE);
-        this.applet.init();
-        this.applet.start();
+        try
+        {
+            System.setProperty("jagex.disableBouncyCastle", "true");
+            this.applet.resize(GAME_FIXED_SIZE);
+            this.applet.setPreferredSize(GAME_FIXED_SIZE);
+            this.applet.setMinimumSize(GAME_FIXED_SIZE);
+            this.applet.init();
+            this.applet.start();
+        }
+        catch (Exception ignored)
+        {
+        }
     }
 
     /**

@@ -8,12 +8,14 @@ import osrs.dev.ui.ODClientFrame;
 import osrs.dev.util.JagConfigUtil;
 
 import javax.swing.*;
+import java.io.File;
 
 public class Main {
     private static JagConfigUtil config;
+    public static final File ODCLIENT_HOME = new File(System.getProperty("user.home") + "/ODClient/");
     public static void main(String[] args) throws Exception {
         FlatDarkLaf.setup();
-        config = new JagConfigUtil(60);
+        config = new JagConfigUtil(6);
         Modder.mod(config.getGamePack());
         SwingUtilities.invokeLater(ODClientFrame::new);
     }

@@ -11,6 +11,8 @@ public interface RSClient extends RSGameEngine, AppletStub
     String getClientID();
     void setDisableRender(boolean bool);
     RSClient getClient();
+    String getUsername();
+    String getCharacterId();
     void doAction(int param0, int param1, int opcode, int identifier, int itemId, int worldViewId, String option, String target, int canvasX, int canvasY);
 
     /**
