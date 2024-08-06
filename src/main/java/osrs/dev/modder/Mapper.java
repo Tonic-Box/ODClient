@@ -1,15 +1,12 @@
 package osrs.dev.modder;
 
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.CtMethod;
-import javassist.Modifier;
+import javassist.*;
 import javassist.bytecode.MethodInfo;
-import lombok.Getter;
+import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
-
-import java.util.HashSet;
-import java.util.Set;
+import osrs.dev.util.modding.CodeUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Mapper
 {
@@ -44,7 +41,6 @@ public class Mapper
             if(field.getType().getName().equals("client"))
             {
                 Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor(), field.getModifiers());
-                return;
             }
         }
         catch (Exception ignored) {}
@@ -61,10 +57,46 @@ public class Mapper
             CtClass gameEngine = clazz.getSuperclass();
             Mappings.addClass("GameEngine", gameEngine.getName());
             findGraphicsTick(gameEngine);
+            findRunAndStuff(gameEngine);
         }
         catch (Exception ignored) {
         }
+    }
 
+    public static void findRunAndStuff(CtClass clazz) throws Exception
+    {
+        CtMethod run = clazz.getMethod("run", "()V");
+        Mappings.addMethodNoGarbage("run", run.getName(), clazz.getName(), run.getMethodInfo2().getDescriptor(), run.getModifiers());
+        Mapping mapping = Mappings.findByTag("graphicsTick");
+        String name = mapping.getObfuscatedName();
+        String descriptor = mapping.getDescriptor();
+        List<CtMethod> methods = new ArrayList<>();
+        CodeUtil.scanForMethodRefs(run, methods);
+        CtMethod clientTick = null;
+        for(int i = 0; i < methods.size(); i++)
+        {
+            if(name.equals(methods.get(i).getName()) && descriptor.equals(methods.get(i).getMethodInfo2().getDescriptor()))
+            {
+                clientTick = methods.get(i - 1);
+                break;
+            }
+        }
+        if(clientTick == null)
+        {
+            throw new NotFoundException("ClientTick not found");
+        }
+        Mappings.addMethod("clientTick", clientTick.getName(), clazz.getName(), clientTick.getMethodInfo2().getDescriptor(), clientTick.getModifiers());
+
+        methods.clear();
+        CodeUtil.scanForMethodRefs(clientTick, methods);
+
+        for(CtMethod method : methods)
+        {
+            if(!method.getDeclaringClass().getName().equals("client"))
+                continue;
+            Mappings.addMethod("doCycle", method.getName(), "client", method.getMethodInfo2().getDescriptor(), method.getModifiers());
+            break;
+        }
     }
 
     private static void findGraphicsTick(CtClass clazz) throws Exception
@@ -91,6 +123,8 @@ public class Mapper
             Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor(), method.getModifiers());
         }
     }
+
+
 
     private static void findDoAction(CtMethod method)
     {

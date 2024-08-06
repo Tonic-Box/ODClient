@@ -9,6 +9,7 @@ import osrs.dev.annotations.Shadow;
 import osrs.dev.modder.model.MappedType;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
+import osrs.dev.util.modding.MethodBuilder;
 import osrs.dev.util.Introspection;
 
 import java.util.HashMap;
@@ -160,20 +161,64 @@ public class Injector
         target.defrost();
         String targName = ((Shadow) method.getAnnotation(Shadow.class)).value();
         boolean isMethod = ((Shadow) method.getAnnotation(Shadow.class)).method();
+        Mapping mapping = Mappings.findByTag(targName);
 
         if(isMethod)
         {
-            //NYI
+            if(!mapping.getType().equals(MappedType.METHOD))
+                return;
+
+            CtMethod targetMethod = mapping.getMethod();
+            if(targetMethod == null)
+                return;
+
+            StringBuilder callParams = new StringBuilder();
+            StringBuilder methodParams = new StringBuilder();
+            if(targetMethod.getParameterTypes() != null)
+            {
+                int i;
+                for(i = 0; i < method.getParameterTypes().length; i++)
+                {
+                    methodParams.append(",").append(targetMethod.getParameterTypes()[i].getName()).append(" var").append(i);
+                    callParams.append(",(").append(targetMethod.getParameterTypes()[i].getName()).append(")").append("var").append(i);
+                }
+
+                if(mapping.getGarbage() != null)
+                {
+                    callParams.append(",(").append(targetMethod.getParameterTypes()[i].getName()).append(")").append(mapping.getGarbage().getValue());
+                }
+
+                if(methodParams.toString().startsWith(","))
+                    methodParams = new StringBuilder(methodParams.substring(1));
+                if(callParams.toString().startsWith(","))
+                    callParams = new StringBuilder(callParams.substring(1));
+            }
+
+            String clazz = mapping.getObfuscatedClass().equals(target.getName()) ? "" : mapping.getObfuscatedClass() + ".";
+
+            //craft method we can access with built-in garb that targets out instrumented pair
+            String returnType = method.getReturnType().getName();
+            String accessMethod = new MethodBuilder()
+                    .generateFromTemplate(method)
+                    .Public()
+                    .noModifier()
+                    .notFinal()
+                    .withName(method.getName())
+                    .withArgs(methodParams.toString())
+                    .withBody("{ " + (returnType.equals("void") ? "" : "return ") + clazz + targetMethod.getName() + "(" + callParams + "); }")
+                    .get();
+
+            CtMethod accessible = CtNewMethod.make(accessMethod, target);
+            target.addMethod(accessible);
         }
         else
         {
-            Mapping mapping = Mappings.findByTag(targName);
             if(!mapping.getType().equals(MappedType.FIELD))
                 return;
 
             CtMethod insert;
-            String clazz = mapping.getObfuscatedClass().equals(target.getName()) ? "" : mapping.getObfuscatedClass();
-            String body = "{ return " + clazz + "." + mapping.getObfuscatedName() + "; }";
+            String clazz = mapping.getObfuscatedClass().equals(target.getName()) ? "" : mapping.getObfuscatedClass() + ".";
+            String body = "{ return " + clazz + mapping.getObfuscatedName() + "; }";
             if(Modifier.isStatic(method.getModifiers()))
             {
                 insert = CtNewMethod.make("public static " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
@@ -195,42 +240,50 @@ public class Injector
      */
     public static void methodHook(CtClass target, CtMethod method) throws Exception
     {
-        target.defrost();
-        String disableName = ((MethodHook) method.getAnnotation(MethodHook.class)).value();
-        Mapping entry = Mappings.findByTag(disableName);
-
-        CtMethod targetMethod = null;
-        for(CtMethod elem : target.getDeclaredMethods())
+        try
         {
-            if(!elem.getName().equals(entry.getObfuscatedName()))
-                continue;
+            target.defrost();
+            String disableName = ((MethodHook) method.getAnnotation(MethodHook.class)).value();
+            Mapping entry = Mappings.findByTag(disableName);
 
-            if(!elem.getMethodInfo2().getDescriptor().equals(entry.getDescriptor()))
-                continue;
+            CtMethod targetMethod = null;
+            for(CtMethod elem : target.getDeclaredMethods())
+            {
+                if(!elem.getName().equals(entry.getObfuscatedName()))
+                    continue;
 
-            targetMethod = elem;
-            break;
+                if(!elem.getMethodInfo2().getDescriptor().equals(entry.getDescriptor()))
+                    continue;
+
+                targetMethod = elem;
+                break;
+            }
+
+            injectMethod(target, method);
+            target.defrost();
+
+            String ret = getReturn(method);
+
+            StringBuilder args = new StringBuilder("(");
+
+            int length = method.getParameterTypes().length;
+            for(int i = 1; i <= length; i++)
+            {
+                args.append("$").append(i).append(",");
+            }
+
+            if(args.toString().endsWith(","))
+            {
+                args.setLength(args.length() - 1);
+            }
+
+            targetMethod.insertBefore("if(" + method.getName() + args + ")) { return " + ret + "; }");
         }
-
-        injectMethod(target, method);
-        target.defrost();
-
-        String ret = getReturn(method);
-
-        StringBuilder args = new StringBuilder("(");
-
-        int length = method.getParameterTypes().length;
-        for(int i = 1; i <= length; i++)
+        catch (Exception ex)
         {
-            args.append("$").append(i).append(",");
+            System.out.println(method.getLongName());
+            ex.printStackTrace();
         }
-
-        if(args.toString().endsWith(","))
-        {
-            args.setLength(args.length() - 1);
-        }
-
-        targetMethod.insertBefore("if(" + method.getName() + args + ")) { return " + ret + "; }");
     }
 
     public static void injectMethod(CtClass target, CtMethod method) throws Exception

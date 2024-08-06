@@ -25,12 +25,13 @@ public class Mappings
 
     public static void addMethod(String name, String obfuscatedName, String obfuscatedClass, String descriptor, int modifiers)
     {
-        System.out.println("Found Method: " + name);
+        System.out.println("Found Method: " + name + " : " + obfuscatedClass + "." + obfuscatedName + descriptor);
         mappings.add(new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, modifiers, MappedType.METHOD));
     }
 
     public static void addMethodNoGarbage(String name, String obfuscatedName, String obfuscatedClass, String descriptor, int modifiers)
     {
+        System.out.println("Found Method: " + name + " : " + obfuscatedClass + "." + obfuscatedName + descriptor);
         Mapping mapping = new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, modifiers, MappedType.METHOD);
         mapping.setDone(true);
         mappings.add(mapping);

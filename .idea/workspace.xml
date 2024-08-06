@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Little cleanup.">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Implemented garbage scanning. Also implemented pre-processing to ensure we only considder the used methods in out mappings. Also added a fair bit of java doc'ing.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/client/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/client/Loader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSDoActionMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSDoActionMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSGameEngineMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSGameEngineMixin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Modder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Modder.java" afterDir="false" />
@@ -186,7 +187,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722631945469</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Implemented garbage scanning. Also implemented pre-processing to ensure we only considder the used methods in out mappings. Also added a fair bit of java doc'ing.">
+      <option name="closed" value="true" />
+      <created>1722909740422</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1722909740422</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -211,6 +220,7 @@
     <MESSAGE value="Small tweaks to injector" />
     <MESSAGE value="implemented a basic event bus, menu action logging is now togleable via menu bar" />
     <MESSAGE value="Little cleanup." />
-    <option name="LAST_COMMIT_MESSAGE" value="Little cleanup." />
+    <MESSAGE value="Implemented garbage scanning. Also implemented pre-processing to ensure we only considder the used methods in out mappings. Also added a fair bit of java doc'ing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented garbage scanning. Also implemented pre-processing to ensure we only considder the used methods in out mappings. Also added a fair bit of java doc'ing." />
   </component>
 </project>

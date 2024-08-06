@@ -8,9 +8,10 @@ import osrs.dev.api.RSClient;
 import osrs.dev.util.Logger;
 
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 
 @Mixin("Client")
-public abstract class RSClientMixin implements RSClient
+public abstract class RSClientMixin extends RSGameEngineMixin implements RSClient
 {
     @Inject
     private String uid;
@@ -26,7 +27,20 @@ public abstract class RSClientMixin implements RSClient
         return uid;
     }
 
+    @MethodHook("doCycle")
+    public boolean doCycle() {
+        if (queue.peek() != null) {
+            queue.poll().run();
+        }
+
+        return false;
+    }
+
     @Shadow("clientField")
     @Override
     public abstract RSClient getClient();
+
+    @Shadow(value = "menuAction", method = true)
+    @Override
+    public abstract void doAction(int param0, int param1, int opcode, int identifier, int itemId, int worldViewId, String option, String target, int canvasX, int canvasY);
 }
