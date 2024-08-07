@@ -1,4 +1,4 @@
-package osrs.dev.util.modding;
+package osrs.dev.modder.model.source;
 
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -138,6 +138,7 @@ public class MethodBuilder {
     //body
     public MethodBuilder withBody(String body)
     {
+        _modifier = _modifier.replace("abstract ", "");
         if(!body.startsWith("{"))
             body = "{" + body;
         if(!body.endsWith("}"))

@@ -10,6 +10,7 @@ import osrs.dev.modder.model.javassist.MethodDefinition;
 import osrs.dev.modder.model.javassist.enums.BlockType;
 import osrs.dev.modder.model.javassist.instructions.FieldLine;
 import osrs.dev.modder.model.javassist.instructions.MethodLine;
+import osrs.dev.modder.model.javassist.instructions.ValueLine;
 import osrs.dev.util.modding.CodeUtil;
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public class Mapper
         if(!definition.containsBlockWithValue("Please enter your username/email address."))
             return;
 
+        Mappings.addClass("Login", method.getDeclaringClass().getName());
+
+        MethodLine updateGameState;
         FieldLine fieldLine;
         String username = null;
         for(CodeBlock block : definition.getBody())
@@ -65,8 +69,7 @@ public class Mapper
                     username = fieldLine.getName();
                 }
             }
-
-            if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
+            else if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
             {
                 String finalUsername = username;
                 FieldLine methodLine = block.findFirst(m -> {
@@ -80,6 +83,23 @@ public class Mapper
                 {
                     Mappings.addField("Login_password", methodLine.getName(), methodLine.getClazz(), methodLine.getType());
                 }
+            }
+            else if(block.findFirst(i -> {
+                if(!(i instanceof ValueLine))
+                    return false;
+
+                ValueLine line = i.transpose();
+                if(!(line.getValue() instanceof Number))
+                    return false;
+
+                return ((int)line.getValue()) == 20;
+            }) != null)
+            {
+                updateGameState = block.findFirst(m -> m instanceof MethodLine);
+                if(updateGameState == null)
+                    continue;
+
+                Mappings.addMethod("updateGameState", updateGameState.getName(), updateGameState.getClazz(), updateGameState.getType());
             }
         }
     }

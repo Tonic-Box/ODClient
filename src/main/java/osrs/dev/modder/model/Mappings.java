@@ -1,10 +1,16 @@
 package osrs.dev.modder.model;
 
+import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
 import lombok.Getter;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * our in-memory manager for gamepack mappings
@@ -70,5 +76,28 @@ public class Mappings
             return getClasses().stream().filter(c -> c.getName().equals(name)).findFirst().orElse(null);
         }
         return getClasses().stream().filter(c -> c.getName().equals(mapping.getObfuscatedClass())).findFirst().orElse(null);
+    }
+
+    public static void dumpInjectedGPAsJar(String path) throws CannotCompileException, IOException {
+        File pathAsFile = new File(path);
+        pathAsFile.mkdir();
+
+        File jarFile = new File(path + File.separatorChar + "InjectedGamePack.jar");
+        if (jarFile.exists())
+            jarFile.delete();
+        jarFile.createNewFile();
+
+        FileOutputStream fos = new FileOutputStream(jarFile);
+        ZipOutputStream zos = new ZipOutputStream(fos);
+        for (CtClass clazz : classes) {
+            String className = clazz.getName().replace(".", "/") + ".class";
+            ZipEntry entry = new ZipEntry(className);
+            zos.putNextEntry(entry);
+            byte[] asBytes = clazz.toBytecode();
+            zos.write(asBytes, 0, asBytes.length);
+        }
+
+        zos.close();
+        System.out.println("Jar output finished. Check path " + path);
     }
 }

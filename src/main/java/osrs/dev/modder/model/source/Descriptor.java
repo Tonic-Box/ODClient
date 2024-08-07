@@ -1,4 +1,4 @@
-package osrs.dev.util.modding;
+package osrs.dev.modder.model.source;
 
 import lombok.Getter;
 import java.util.HashMap;

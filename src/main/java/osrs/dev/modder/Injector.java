@@ -1,13 +1,15 @@
 package osrs.dev.modder;
 
 import javassist.*;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import osrs.dev.annotations.*;
 import osrs.dev.modder.model.MappedType;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
-import osrs.dev.util.modding.MethodBuilder;
+import osrs.dev.modder.model.source.MethodBuilder;
 import osrs.dev.util.Introspection;
+import osrs.dev.util.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,8 @@ public class Injector
 {
     private static final String MIXINS = "osrs.dev.mixins";
     private static final String RSAPI = "osrs.dev.api";
+    @Getter
+    private static final Map<Mapping, Pair<String,String>> fieldWriteHooks = new HashMap<>();
 
     /**
      * Takes in outr mixins and uses them as instructions for modifying the gamepack
@@ -156,6 +160,31 @@ public class Injector
         {
             replace(target, method);
         }
+
+        if(Introspection.has(method, FieldHook.class))
+        {
+            fieldHook(target, method);
+        }
+    }
+
+    public static void fieldHook(CtClass target, CtMethod method)
+    {
+        try
+        {
+            String name = ((FieldHook) method.getAnnotation(FieldHook.class)).value();
+            boolean after = ((FieldHook) method.getAnnotation(FieldHook.class)).after();
+            Mapping field = Mappings.findByTag(name);
+            field.setFieldHookAfter(after);
+            CtMethod hookMethod = CtNewMethod.copy(method, target, null);
+            target.addMethod(hookMethod);
+            fieldWriteHooks.put(field, new Pair<>(target.getName(), hookMethod.getName()));
+        }
+        catch (Exception ex)
+        {
+            System.out.println("[@FieldHook] " + method.getLongName());
+            ex.printStackTrace();
+            System.exit(0);
+        }
     }
 
     private static void replace(CtClass target, CtMethod method) throws Exception
@@ -260,14 +289,32 @@ public class Injector
 
             CtMethod insert;
             String clazz = mapping.getObfuscatedClass().equals(target.getName()) ? "" : mapping.getObfuscatedClass() + ".";
-            String body = "{ return " + clazz + mapping.getObfuscatedName() + "; }";
-            if(Modifier.isStatic(method.getModifiers()))
+
+            if(method.getParameterTypes().length != 0)
             {
-                insert = CtNewMethod.make("public static " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
+                String accessMethod = new MethodBuilder()
+                        .generateFromTemplate(method)
+                        .Public()
+                        .noModifier()
+                        .notFinal()
+                        .withName(method.getName())
+                        .withArgs(method.getParameterTypes()[0].getName() + " var1")
+                        .withBody("{ " + clazz + mapping.getObfuscatedName() + "=var1; }")
+                        .get();
+
+                insert = CtNewMethod.make(accessMethod, target);
             }
             else
             {
-                insert = CtNewMethod.make("public " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
+                String body = "{ return " + clazz + mapping.getObfuscatedName() + "; }";
+                if(Modifier.isStatic(method.getModifiers()))
+                {
+                    insert = CtNewMethod.make("public static " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
+                }
+                else
+                {
+                    insert = CtNewMethod.make("public " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);
+                }
             }
 
             target.addMethod(insert);

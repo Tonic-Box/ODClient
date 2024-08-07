@@ -2,7 +2,9 @@ package osrs.dev.modder;
 
 import javassist.*;
 import osrs.dev.modder.model.Mappings;
+import osrs.dev.util.OptionsParser;
 import osrs.dev.util.modding.CodeUtil;
+
 import java.util.*;
 import java.util.jar.JarFile;
 
@@ -35,6 +37,13 @@ public class Modder
         Mapper.map();
         GarbageScanner.scan();
         Injector.inject();
+        if(OptionsParser.getRsDumpPath() != null)
+        {
+            try {
+                Mappings.dumpInjectedGPAsJar(OptionsParser.getRsDumpPath());
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     /**

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import osrs.dev.modder.model.javassist.enums.LineType;
+import osrs.dev.util.modding.CodeUtil;
 
 import java.util.Arrays;
 
@@ -43,7 +44,7 @@ public class InstructionLine {
         String out = "[" + getPosition() + "] " + getMnemonic() + " ";
         if(this instanceof FieldLine)
         {
-            FieldLine fieldLine = (FieldLine) this;
+            FieldLine fieldLine = transpose();
             String garb = "";
             String initialValue = "";
             if(fieldLine.getGarbageSetter() != null)
@@ -56,13 +57,22 @@ public class InstructionLine {
             }
             if(fieldLine.getInitialValue() != null)
             {
-                initialValue = " // init=\"" + fieldLine.getInitialValue() + "\"";
+                String value = "";
+                if(fieldLine.getInitialValue().equals("null") || CodeUtil.isNumeric(fieldLine.getInitialValue()))
+                {
+                    value = fieldLine.getInitialValue();
+                }
+                else
+                {
+                    value = "\"" + fieldLine.getInitialValue() + "\"";
+                }
+                initialValue = " // init=" + value;
             }
             out += "<" + fieldLine.getType() + "> " + fieldLine.getClazz() + "." + fieldLine.getName() + initialValue + garb;
         }
         else if(this instanceof MethodLine)
         {
-            MethodLine methodLine = (MethodLine) this;
+            MethodLine methodLine = transpose();
             String garb = "";
             if(methodLine.getGarbage() != null)
             {
@@ -72,33 +82,33 @@ public class InstructionLine {
         }
         else if(this instanceof ValueLine)
         {
-            ValueLine valueLine = (ValueLine) this;
+            ValueLine valueLine = transpose();
             String value = "" + (valueLine.getRawValue() instanceof String ? "\"" + valueLine.getValue() + "\"" : valueLine.getValue());
             out += "<" + valueLine.getType() + "> " + value;
         }
         else if(this instanceof JumpLine)
         {
-            JumpLine jumpLine = (JumpLine) this;
+            JumpLine jumpLine = transpose();
             out += jumpLine.getJumpPos();
         }
         else if(this instanceof IfLine)
         {
-            IfLine ifLine = (IfLine) this;
+            IfLine ifLine = transpose();
             out += ifLine.getJumpPos();
         }
         else if(this instanceof LocalLine)
         {
-            LocalLine localLine = (LocalLine) this;
+            LocalLine localLine = transpose();
             out += localLine.getIndex();
         }
         else if(this instanceof InitLine)
         {
-            InitLine initLine = (InitLine) this;
+            InitLine initLine = transpose();
             out += initLine.getInfo();
         }
         else if(this instanceof ArithmeticLine)
         {
-            ArithmeticLine arithmeticLine = (ArithmeticLine) this;
+            ArithmeticLine arithmeticLine = transpose();
             out += arithmeticLine.getOperator();
         }
         return out;

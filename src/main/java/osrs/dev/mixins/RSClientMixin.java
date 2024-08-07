@@ -6,6 +6,7 @@ import osrs.dev.annotations.Mixin;
 import osrs.dev.annotations.Shadow;
 import osrs.dev.api.RSClient;
 import osrs.dev.util.Logger;
+import osrs.dev.util.eventbus.EventBus;
 
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -15,6 +16,9 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
 {
     @Inject
     private String uid;
+
+    @Inject
+    private boolean shouldProcessTick;
 
     @Inject
     @Override
@@ -43,6 +47,14 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
     @Shadow("Login_username")
     @Override
     public abstract String getUsername();
+
+    @Shadow("Login_username")
+    @Override
+    public abstract void setUsername(String username);
+
+    @Shadow("Login_password")
+    @Override
+    public abstract void setPassword(String password);
     @Shadow("JX_CHARACTER_ID")
     @Override
     public abstract String getCharacterId();

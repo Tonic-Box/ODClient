@@ -15,6 +15,7 @@ public class Mapping
 
     private boolean done = false;
     private GarbageValue garbage = null;
+    private boolean fieldHookAfter = false;
 
     public CtMethod getMethod()
     {

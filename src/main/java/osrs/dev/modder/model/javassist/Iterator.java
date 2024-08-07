@@ -5,6 +5,7 @@ import javassist.bytecode.*;
 import osrs.dev.modder.model.javassist.enums.BlockType;
 import osrs.dev.modder.model.javassist.enums.LineType;
 import osrs.dev.modder.model.javassist.instructions.*;
+import osrs.dev.util.AstUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,6 @@ public class Iterator
                     pos = codeIterator.next();
                     int opcode = codeIterator.byteAt(pos);
                     int length = codeIterator.hasNext() ? codeIterator.lookAhead() - pos : codeIterator.getCodeLength() - pos;
-
                     switch(opcode)
                     {
                         case Opcode.GETFIELD:
@@ -320,6 +320,7 @@ public class Iterator
             case Opcode.INVOKESTATIC:
             case Opcode.INVOKEINTERFACE:
             case Opcode.INVOKEDYNAMIC:
+            case Opcode.INVOKESPECIAL:
                 if(line instanceof MethodLine)
                 {
                     MethodLine methodLine = (MethodLine) line;
