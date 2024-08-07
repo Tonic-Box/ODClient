@@ -1,10 +1,12 @@
-package osrs.dev.modder.model.ast;
+package osrs.dev.modder.model.javassist;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import osrs.dev.modder.model.ast.enums.BlockType;
-import osrs.dev.modder.model.ast.instructions.InstructionLine;
-import osrs.dev.modder.model.ast.instructions.ValueLine;
+import osrs.dev.modder.model.javassist.enums.BlockType;
+import osrs.dev.modder.model.javassist.instructions.FieldLine;
+import osrs.dev.modder.model.javassist.instructions.InstructionLine;
+import osrs.dev.modder.model.javassist.instructions.MethodLine;
+import osrs.dev.modder.model.javassist.instructions.ValueLine;
 import osrs.dev.util.ArrayUtil;
 
 import java.util.List;
@@ -40,6 +42,22 @@ public class CodeBlock {
         return true;
     }
 
+    public boolean hasMethodCall(String methodClassName, String methodName, String descriptor)
+    {
+        for(InstructionLine line : getInstructions())
+        {
+            if(!(line instanceof MethodLine))
+                continue;
+
+            MethodLine methodLine = line.transpose();
+            if(!methodLine.getName().equals(methodName) || !methodLine.getClazz().equals(methodClassName) || !methodLine.getType().equals(descriptor))
+                continue;
+
+            return true;
+        }
+        return false;
+    }
+
     public <T extends Number> boolean containsValue(T value) {
         for (InstructionLine line : getInstructions()) {
             if (!(line instanceof ValueLine))
@@ -57,19 +75,28 @@ public class CodeBlock {
         return false;
     }
 
-    public boolean containsValue(String value ) {
+    public boolean containsValue(String value) {
         for (InstructionLine line : getInstructions()) {
-            if (!(line instanceof ValueLine))
-                continue;
+            if (line instanceof ValueLine)
+            {
+                ValueLine valueLine = (ValueLine) line;
+                if (!value.getClass().isInstance(valueLine.getValue()))
+                    continue;
 
-            ValueLine valueLine = (ValueLine) line;
-            if (!value.getClass().isInstance(valueLine.getValue()))
-                continue;
+                String n = valueLine.getValue();
+                if (!value.equals(n))
+                    continue;
+                return true;
+            }
+            else if (line instanceof FieldLine)
+            {
+                FieldLine fieldLine = line.transpose();
 
-            String n = valueLine.getValue();
-            if (!value.equals(n))
-                continue;
-            return true;
+                String n = fieldLine.getInitialValue();
+                if (!value.equals(n))
+                    continue;
+                return true;
+            }
         }
         return false;
     }

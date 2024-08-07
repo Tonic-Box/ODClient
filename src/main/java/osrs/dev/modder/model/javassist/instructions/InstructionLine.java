@@ -1,11 +1,11 @@
-package osrs.dev.modder.model.ast.instructions;
+package osrs.dev.modder.model.javassist.instructions;
 
 import javassist.bytecode.CodeIterator;
 import javassist.bytecode.ConstPool;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import osrs.dev.modder.model.ast.enums.LineType;
+import osrs.dev.modder.model.javassist.enums.LineType;
 
 import java.util.Arrays;
 
@@ -45,6 +45,7 @@ public class InstructionLine {
         {
             FieldLine fieldLine = (FieldLine) this;
             String garb = "";
+            String initialValue = "";
             if(fieldLine.getGarbageSetter() != null)
             {
                 garb = " / GarbageSetter=" + fieldLine.getGarbageSetter().longValue();
@@ -53,7 +54,11 @@ public class InstructionLine {
             {
                 garb = " / GarbageGetter=" + fieldLine.getGarbageGetter().longValue();
             }
-            out += "<" + fieldLine.getType() + "> " + fieldLine.getClazz() + "." + fieldLine.getName() + garb;
+            if(fieldLine.getInitialValue() != null)
+            {
+                initialValue = " // init=\"" + fieldLine.getInitialValue() + "\"";
+            }
+            out += "<" + fieldLine.getType() + "> " + fieldLine.getClazz() + "." + fieldLine.getName() + initialValue + garb;
         }
         else if(this instanceof MethodLine)
         {

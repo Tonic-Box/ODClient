@@ -1,14 +1,16 @@
 package osrs.dev.util.modding;
 
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.Modifier;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.bytecode.CodeIterator;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.MethodInfo;
 import javassist.bytecode.Opcode;
 import osrs.dev.modder.model.Mappings;
+import osrs.dev.modder.model.javassist.CodeBlock;
+import osrs.dev.modder.model.javassist.ConstructorDefinition;
+import osrs.dev.modder.model.javassist.instructions.FieldLine;
+import osrs.dev.modder.model.javassist.instructions.InstructionLine;
+import osrs.dev.modder.model.javassist.instructions.ValueLine;
 
 import javax.net.ssl.SSLSession;
 import java.applet.Applet;
@@ -153,5 +155,84 @@ public class CodeUtil
         } catch (NotFoundException ignored) {
         }
         return false;
+    }
+
+    public static <T> T inspectFieldInit(boolean isStatic, String fieldClassName, String fieldName) {
+        CtClass clazz = Mappings.getClazz(fieldClassName);
+        ConstructorDefinition definition;
+        CtConstructor classInitializer;
+        if(isStatic)
+        {
+            classInitializer = clazz.getClassInitializer();
+            definition = new ConstructorDefinition(classInitializer);
+            for(CodeBlock block : definition.getBody())
+            {
+                if(!block.contains(Opcode.PUTSTATIC))
+                    continue;
+
+                InstructionLine line;
+                for(int i = 0; i < block.getInstructions().size(); i++)
+                {
+                    if(i == 0)
+                        continue;
+
+                    line = block.getInstructions().get(i);
+                    if(!(line instanceof FieldLine))
+                        continue;
+
+                    FieldLine fieldLine = line.transpose();
+                    if(!fieldLine.getName().equals(fieldName) || !fieldLine.getClazz().equals(fieldClassName))
+                        continue;
+
+                    line = block.getInstructions().get(i - 1);
+                    if(!(line instanceof ValueLine))
+                        continue;
+
+                    ValueLine valueLine = line.transpose();
+                    if(valueLine.getValue() == null)
+                        continue;
+
+                    return valueLine.getValue();
+                }
+            }
+        }
+        else
+        {
+            for (CtConstructor constructor : clazz.getDeclaredConstructors())
+            {
+                definition = new ConstructorDefinition(constructor);
+                for(CodeBlock block : definition.getBody())
+                {
+                    if(!block.contains(Opcode.PUTFIELD))
+                        continue;
+
+                    InstructionLine line;
+                    for(int i = 0; i < block.getInstructions().size(); i++)
+                    {
+                        if(i == 0)
+                            continue;
+
+                        line = block.getInstructions().get(i);
+                        if(!(line instanceof FieldLine))
+                            continue;
+
+                        FieldLine fieldLine = line.transpose();
+                        if(!fieldLine.getName().equals(fieldName) || !fieldLine.getClazz().equals(fieldClassName))
+                            continue;
+
+                        line = block.getInstructions().get(i - 1);
+                        if(!(line instanceof ValueLine))
+                            continue;
+
+                        ValueLine valueLine = line.transpose();
+                        if(valueLine.getValue() == null)
+                            continue;
+
+                        return valueLine.getValue();
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

@@ -1,10 +1,10 @@
-package osrs.dev.modder.model.ast.instructions;
+package osrs.dev.modder.model.javassist.instructions;
 
 import javassist.bytecode.CodeIterator;
 import javassist.bytecode.ConstPool;
 import javassist.bytecode.Mnemonic;
 import lombok.Getter;
-import osrs.dev.modder.model.ast.enums.LineType;
+import osrs.dev.modder.model.javassist.enums.LineType;
 
 import java.util.List;
 

@@ -11,7 +11,6 @@ public class Mapping
     private final String obfuscatedName;
     private final String obfuscatedClass;
     private final String descriptor;
-    private final int modifiers;
     private final MappedType type;
 
     private boolean done = false;

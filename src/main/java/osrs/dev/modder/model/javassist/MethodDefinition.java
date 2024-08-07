@@ -1,4 +1,4 @@
-package osrs.dev.modder.model.ast;
+package osrs.dev.modder.model.javassist;
 
 import javassist.CtMethod;
 import javassist.Modifier;
@@ -6,9 +6,9 @@ import javassist.bytecode.Opcode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import osrs.dev.modder.model.ast.enums.BlockType;
-import osrs.dev.modder.model.ast.instructions.FieldLine;
-import osrs.dev.modder.model.ast.instructions.InstructionLine;
+import osrs.dev.modder.model.javassist.enums.BlockType;
+import osrs.dev.modder.model.javassist.instructions.FieldLine;
+import osrs.dev.modder.model.javassist.instructions.InstructionLine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +60,28 @@ public class MethodDefinition {
     public int countBlocksOfType(BlockType type)
     {
         return (int) getBody().stream().filter(b -> b.getBlockType().equals(type)).count();
+    }
+
+    public <T extends Number> boolean containsBlockWithValue(T value)
+    {
+        for(CodeBlock block : body)
+        {
+            if(block.containsValue(value))
+                return true;
+
+        }
+        return false;
+    }
+
+    public boolean containsBlockWithValue(String value)
+    {
+        for(CodeBlock block : body)
+        {
+            if(block.containsValue(value))
+                return true;
+
+        }
+        return false;
     }
 
     private static String[] getParameterTypes(String descriptor) {

@@ -4,9 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="UUID spoofing/caching per account">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Small bugfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mapping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mapping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/AstUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/AstUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/CodeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/Iterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/Iterator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/MethodDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/MethodDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/enums/BlockType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/enums/BlockType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/enums/LineType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/enums/LineType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/ArithmeticLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/ArithmeticLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/FieldLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/FieldLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/IfLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/IfLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/InitLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/InitLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/InstructionLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/InstructionLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/JumpLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/JumpLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/LocalLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/LocalLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/MethodLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/MethodLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/StackLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/StackLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/ast/instructions/ValueLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/ValueLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/modding/CodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/modding/CodeUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,7 +231,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722973339983</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Small bugfix">
+      <option name="closed" value="true" />
+      <created>1722974101903</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1722974101903</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -241,6 +268,7 @@
     <MESSAGE value="implemented RSClient::invoke methods for iinvoking on client thread and also for getting return values from client thread" />
     <MESSAGE value="Little cleanup" />
     <MESSAGE value="UUID spoofing/caching per account" />
-    <option name="LAST_COMMIT_MESSAGE" value="UUID spoofing/caching per account" />
+    <MESSAGE value="Small bugfix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Small bugfix" />
   </component>
 </project>

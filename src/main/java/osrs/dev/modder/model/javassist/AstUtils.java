@@ -1,8 +1,8 @@
-package osrs.dev.modder.model.ast;
+package osrs.dev.modder.model.javassist;
 
 import javassist.bytecode.*;
-import osrs.dev.modder.model.ast.enums.BlockType;
-import osrs.dev.modder.model.ast.instructions.*;
+import osrs.dev.modder.model.javassist.enums.BlockType;
+import osrs.dev.modder.model.javassist.instructions.*;
 import osrs.dev.util.CircularList;
 import java.util.ArrayList;
 import java.util.List;

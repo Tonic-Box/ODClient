@@ -5,13 +5,12 @@ import javassist.bytecode.MethodInfo;
 import javassist.bytecode.Opcode;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
-import osrs.dev.modder.model.ast.CodeBlock;
-import osrs.dev.modder.model.ast.MethodDefinition;
-import osrs.dev.modder.model.ast.enums.BlockType;
-import osrs.dev.modder.model.ast.instructions.FieldLine;
-import osrs.dev.modder.model.ast.instructions.MethodLine;
+import osrs.dev.modder.model.javassist.CodeBlock;
+import osrs.dev.modder.model.javassist.MethodDefinition;
+import osrs.dev.modder.model.javassist.enums.BlockType;
+import osrs.dev.modder.model.javassist.instructions.FieldLine;
+import osrs.dev.modder.model.javassist.instructions.MethodLine;
 import osrs.dev.util.modding.CodeUtil;
-import osrs.dev.util.modding.Descriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,42 +45,43 @@ public class Mapper
 
     private static void mapLoginUsername(CtMethod method)
     {
-        try
+        if(Mappings.findByTag("Login_username") != null)
+            return;
+
+        MethodDefinition definition = new MethodDefinition(method);
+        if(!definition.containsBlockWithValue("Please enter your username/email address."))
+            return;
+
+        FieldLine fieldLine;
+        String username = null;
+        for(CodeBlock block : definition.getBody())
         {
-            if(Mappings.findByTag("Login_username") != null)
-                return;
-
-            if(method.getParameterTypes().length != 1)
-                return;
-
-            if(!method.getMethodInfo2().getDescriptor().endsWith(")V"))
-                return;
-
-            int len = method.getMethodInfo2().getCodeAttribute().getCodeLength();
-            if(len < 90 || len > 110)
-                return;
-
-            MethodDefinition methodDefinition = new MethodDefinition(method);
-
-            int conditions = methodDefinition.countBlocksOfType(BlockType.CONDITION);
-            int fieldStores = methodDefinition.countBlocksOfType(BlockType.FIELD_STORE);
-
-            if(fieldStores != 2 || conditions != 6)
-                return;
-
-            for(CodeBlock block : methodDefinition.getBody())
+            if(block.hasMethodCall("java.lang.String", "trim", "()Ljava/lang/String;"))
             {
-                if(block.contains(Opcode.IFNULL))
+                fieldLine = block.findFirst(m -> m.getOpcode() == Opcode.GETSTATIC);
+                if(fieldLine != null)
                 {
-                    FieldLine fieldLine = (FieldLine) block.getInstructions().get(0);
-                    Mappings.addField("Login_username", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
-                    Mappings.addMethod("focusPasswordWhenUsernameFilled", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor(), method.getModifiers());
-                    return;
+                    Mappings.addField("Login_username", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
+                    username = fieldLine.getName();
+                }
+            }
+
+            if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
+            {
+                String finalUsername = username;
+                FieldLine methodLine = block.findFirst(m -> {
+                    if(m.getOpcode() != Opcode.GETSTATIC)
+                        return false;
+
+                    FieldLine line = m.transpose();
+                    return !line.getName().equals(finalUsername);
+                });
+                if(methodLine != null)
+                {
+                    Mappings.addField("Login_password", methodLine.getName(), methodLine.getClazz(), methodLine.getType());
                 }
             }
         }
-        catch (Exception ignored)
-        {}
     }
 
     public static void findGetDeviceId(CtMethod method)
@@ -101,7 +101,7 @@ public class Mapper
                 if(!block.containsValue("12345678-0000-0000-0000-123456789012"))
                     continue;
 
-                Mappings.addMethod("getDeviceId", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor(), method.getModifiers());
+                Mappings.addMethod("getDeviceId", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
                 Mappings.addClass("PlatformInfo", method.getDeclaringClass().getName());
                 return;
             }
@@ -120,7 +120,7 @@ public class Mapper
         {
             if(field.getType().getName().equals("client"))
             {
-                Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor(), field.getModifiers());
+                Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor());
             }
         }
         catch (Exception ignored) {}
@@ -149,7 +149,7 @@ public class Mapper
     public static void findJagAuthStuff(CtClass clazz) throws Exception
     {
         CtMethod init = clazz.getMethod("init", "()V");
-        Mappings.addMethodNoGarbage("init", init.getName(), clazz.getName(), init.getMethodInfo2().getDescriptor(), init.getModifiers());
+        Mappings.addMethodNoGarbage("init", init.getName(), clazz.getName(), init.getMethodInfo2().getDescriptor());
         MethodDefinition definition = new MethodDefinition(init);
         FieldLine fieldLine;
         for(CodeBlock block : definition.getBody())
@@ -157,19 +157,19 @@ public class Mapper
             fieldLine = block.findFirst(i -> i instanceof FieldLine);
             if(block.containsValue("JX_ACCESS_TOKEN"))
             {
-                Mappings.addField("JX_ACCESS_TOKEN", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
+                Mappings.addField("JX_ACCESS_TOKEN", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
             }
             else if(block.containsValue("JX_REFRESH_TOKEN"))
             {
-                Mappings.addField("JX_REFRESH_TOKEN", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
+                Mappings.addField("JX_REFRESH_TOKEN", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
             }
             else if(block.containsValue("JX_SESSION_ID"))
             {
-                Mappings.addField("JX_SESSION_ID", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
+                Mappings.addField("JX_SESSION_ID", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
             }
             else if(block.containsValue("JX_CHARACTER_ID"))
             {
-                Mappings.addField("JX_CHARACTER_ID", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
+                Mappings.addField("JX_CHARACTER_ID", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
             }
             else if(block.containsValue("JX_DISPLAY_NAME"))
             {
@@ -182,7 +182,7 @@ public class Mapper
                     if(!block1.getBlockType().equals(BlockType.FIELD_STORE))
                         continue;
                     fieldLine = block1.findFirst(i -> i.getOpcode() == Opcode.PUTSTATIC);
-                    Mappings.addField("JX_DISPLAY_NAME", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType(), -1);
+                    Mappings.addField("JX_DISPLAY_NAME", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
                 }
             }
         }
@@ -194,7 +194,7 @@ public class Mapper
             return;
 
         CtMethod run = clazz.getMethod("run", "()V");
-        Mappings.addMethodNoGarbage("run", run.getName(), clazz.getName(), run.getMethodInfo2().getDescriptor(), run.getModifiers());
+        Mappings.addMethodNoGarbage("run", run.getName(), clazz.getName(), run.getMethodInfo2().getDescriptor());
         Mapping mapping = Mappings.findByTag("graphicsTick");
         String name = mapping.getObfuscatedName();
         String descriptor = mapping.getDescriptor();
@@ -213,7 +213,7 @@ public class Mapper
         {
             throw new NotFoundException("ClientTick not found");
         }
-        Mappings.addMethod("clientTick", clientTick.getName(), clazz.getName(), clientTick.getMethodInfo2().getDescriptor(), clientTick.getModifiers());
+        Mappings.addMethod("clientTick", clientTick.getName(), clazz.getName(), clientTick.getMethodInfo2().getDescriptor());
 
         methods.clear();
         CodeUtil.scanForMethodRefs(clientTick, methods);
@@ -222,7 +222,7 @@ public class Mapper
         {
             if(!method.getDeclaringClass().getName().equals("client"))
                 continue;
-            Mappings.addMethod("doCycle", method.getName(), "client", method.getMethodInfo2().getDescriptor(), method.getModifiers());
+            Mappings.addMethod("doCycle", method.getName(), "client", method.getMethodInfo2().getDescriptor());
             break;
         }
     }
@@ -248,7 +248,7 @@ public class Mapper
             if(length < 420 || length > 475)
                 continue;
 
-            Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor(), method.getModifiers());
+            Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
         }
     }
 
@@ -266,6 +266,6 @@ public class Mapper
         if(info.getCodeAttribute().getCodeLength() < 5000)
             return;
 
-        Mappings.addMethod("menuAction", method.getName(), method.getDeclaringClass().getName(), info.getDescriptor(), method.getModifiers());
+        Mappings.addMethod("menuAction", method.getName(), method.getDeclaringClass().getName(), info.getDescriptor());
     }
 }

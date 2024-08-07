@@ -1,4 +1,4 @@
-package osrs.dev.modder.model.ast.enums;
+package osrs.dev.modder.model.javassist.enums;
 
 public enum BlockType {
     GOTO,

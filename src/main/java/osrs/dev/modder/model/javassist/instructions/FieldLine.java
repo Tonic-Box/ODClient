@@ -1,4 +1,4 @@
-package osrs.dev.modder.model.ast.instructions;
+package osrs.dev.modder.model.javassist.instructions;
 
 import javassist.CtClass;
 import javassist.CtField;
@@ -9,17 +9,33 @@ import lombok.Getter;
 import lombok.Setter;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
-import osrs.dev.modder.model.ast.enums.LineType;
+import osrs.dev.modder.model.javassist.enums.LineType;
+import osrs.dev.util.modding.CodeUtil;
 
 @Getter
 public class FieldLine extends InstructionLine {
+    private static boolean scanningInit = false;
     public FieldLine(CodeIterator iterator, ConstPool constPool, int pos, int length) {
         super(iterator, iterator.byteAt(pos), Mnemonic.OPCODE[iterator.byteAt(pos)], LineType.FIELD, pos, constPool, length);
         int ref = iterator.u16bitAt(pos + 1);
         type = constPool.getFieldrefType(ref);
         clazz = constPool.getFieldrefClassName(ref);
         name = constPool.getFieldrefName(ref);
-        Static = Mnemonic.OPCODE[iterator.byteAt(pos)].contains("STATIC");
+        Static = Mnemonic.OPCODE[iterator.byteAt(pos)].toLowerCase().contains("static");
+
+        try
+        {
+            //to prevent SOF
+            if(scanningInit)
+                return;
+            scanningInit = true;
+            initialValue = CodeUtil.inspectFieldInit(isStatic(), clazz, name) + "";
+            scanningInit = false;
+        }
+        catch(Exception ex)
+        {
+            scanningInit = false;
+        }
     }
 
     /**
@@ -78,6 +94,7 @@ public class FieldLine extends InstructionLine {
     private final String clazz;
     private final String type;
     private final boolean Static;
+    private String initialValue = null;
     @Setter
     private Number garbageSetter = null;
     @Setter

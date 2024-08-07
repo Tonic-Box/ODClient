@@ -18,22 +18,22 @@ public class Mappings
     @Getter
     private static final List<Mapping> mappings = new ArrayList<>();
 
-    public static void addField(String name, String obfuscatedName, String obfuscatedClass, String descriptor, int modifiers)
+    public static void addField(String name, String obfuscatedName, String obfuscatedClass, String descriptor)
     {
         System.out.println("Found Field: " + name + " : <" + descriptor + "> " + obfuscatedClass + "." + obfuscatedName);
-        mappings.add(new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, modifiers, MappedType.FIELD));
+        mappings.add(new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, MappedType.FIELD));
     }
 
-    public static void addMethod(String name, String obfuscatedName, String obfuscatedClass, String descriptor, int modifiers)
+    public static void addMethod(String name, String obfuscatedName, String obfuscatedClass, String descriptor)
     {
         System.out.println("Found Method: " + name + " : " + obfuscatedClass + "." + obfuscatedName + descriptor);
-        mappings.add(new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, modifiers, MappedType.METHOD));
+        mappings.add(new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, MappedType.METHOD));
     }
 
-    public static void addMethodNoGarbage(String name, String obfuscatedName, String obfuscatedClass, String descriptor, int modifiers)
+    public static void addMethodNoGarbage(String name, String obfuscatedName, String obfuscatedClass, String descriptor)
     {
         System.out.println("Found Method: " + name + " : " + obfuscatedClass + "." + obfuscatedName + descriptor);
-        Mapping mapping = new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, modifiers, MappedType.METHOD);
+        Mapping mapping = new Mapping(name, obfuscatedName, obfuscatedClass, descriptor, MappedType.METHOD);
         mapping.setDone(true);
         mappings.add(mapping);
     }
@@ -41,7 +41,7 @@ public class Mappings
     public static void addClass(String name, String obfuscatedName)
     {
         System.out.println("Found class: " + name);
-        mappings.add(new Mapping(name, obfuscatedName, obfuscatedName, "", -1, MappedType.CLASS));
+        mappings.add(new Mapping(name, obfuscatedName, obfuscatedName, "", MappedType.CLASS));
     }
 
     /**

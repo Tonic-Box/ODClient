@@ -1,4 +1,4 @@
-package osrs.dev.modder.model.ast.enums;
+package osrs.dev.modder.model.javassist.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
