@@ -4,22 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Improvements to MethodDefinition javassist framework. Will now also, for any static fields, sort out what their initial value is in the scanned model.&#10;&#10;Also added some new mappings, namely Login_username, and Login_password">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/GarbageScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/GarbageScanner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Modder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Modder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mapping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mapping.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/AstUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/AstUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/Iterator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/Iterator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/InstructionLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/instructions/InstructionLine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/modding/CodeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/modding/CodeUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/modding/Descriptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/source/Descriptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/modding/MethodBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/source/MethodBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/MethodDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/MethodDefinition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ArrayUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ArrayUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,7 +242,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723013251119</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360">
+      <option name="closed" value="true" />
+      <created>1723060709797</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1723060709797</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -277,6 +281,7 @@
     <MESSAGE value="UUID spoofing/caching per account" />
     <MESSAGE value="Small bugfix" />
     <MESSAGE value="Improvements to MethodDefinition javassist framework. Will now also, for any static fields, sort out what their initial value is in the scanned model.&#10;&#10;Also added some new mappings, namely Login_username, and Login_password" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improvements to MethodDefinition javassist framework. Will now also, for any static fields, sort out what their initial value is in the scanned model.&#10;&#10;Also added some new mappings, namely Login_username, and Login_password" />
+    <MESSAGE value="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360" />
   </component>
 </project>

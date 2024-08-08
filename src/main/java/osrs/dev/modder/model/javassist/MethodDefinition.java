@@ -11,7 +11,9 @@ import osrs.dev.modder.model.javassist.instructions.FieldLine;
 import osrs.dev.modder.model.javassist.instructions.InstructionLine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter
@@ -60,6 +62,26 @@ public class MethodDefinition {
     public int countBlocksOfType(BlockType type)
     {
         return (int) getBody().stream().filter(b -> b.getBlockType().equals(type)).count();
+    }
+
+    public final Set<CodeBlock> pattern(int... opcodes) {
+        Set<CodeBlock> blocks = new HashSet<>();
+        for (CodeBlock block : body) {
+            if (opcodes.length != block.getInstructions().size())
+                continue;
+
+            boolean matches = true;
+            for (int i = 0; i < opcodes.length; i++) {
+                if (block.getInstructions().get(i).getOpcode() != opcodes[i]) {
+                    matches = false;
+                    break;
+                }
+            }
+
+            if (matches)
+                blocks.add(block);
+        }
+        return blocks;
     }
 
     public <T extends Number> boolean containsBlockWithValue(T value)

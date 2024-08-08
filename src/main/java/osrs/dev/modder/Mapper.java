@@ -9,12 +9,13 @@ import osrs.dev.modder.model.javassist.CodeBlock;
 import osrs.dev.modder.model.javassist.MethodDefinition;
 import osrs.dev.modder.model.javassist.enums.BlockType;
 import osrs.dev.modder.model.javassist.instructions.FieldLine;
+import osrs.dev.modder.model.javassist.instructions.InstructionLine;
 import osrs.dev.modder.model.javassist.instructions.MethodLine;
 import osrs.dev.modder.model.javassist.instructions.ValueLine;
+import osrs.dev.util.ArrayUtil;
 import osrs.dev.util.modding.CodeUtil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Mapper
 {
@@ -35,6 +36,7 @@ public class Mapper
                 findDoAction(method);
                 findGetDeviceId(method);
                 mapLoginUsername(method);
+                findLogoutStuff(method);
             }
 
             for(CtField field : clazz.getDeclaredFields())
@@ -161,6 +163,10 @@ public class Mapper
             findGraphicsTick(gameEngine);
             findRunAndStuff(gameEngine);
             findJagAuthStuff(clazz);
+            for(CtMethod method : clazz.getDeclaredMethods())
+            {
+                findServerPacketReceiver(method);
+            }
         }
         catch (Exception ignored) {
         }
@@ -287,5 +293,72 @@ public class Mapper
             return;
 
         Mappings.addMethod("menuAction", method.getName(), method.getDeclaringClass().getName(), info.getDescriptor());
+    }
+
+    public static void findLogoutStuff(CtMethod method)
+    {
+        try {
+            if (!method.getLongName().startsWith("cr.ho(") || !method.getMethodInfo2().getDescriptor().equals("(IB)V"))
+                return;
+
+            MethodDefinition definition = new MethodDefinition(method);
+            boolean pass = false;
+            for (CodeBlock block : definition.getBody()) {
+                if (block.containsValue("The game servers are currently being updated.")) {
+                    pass = true;
+                    break;
+                }
+            }
+            if (!pass)
+                return;
+
+            Mappings.addMethod("forceDisconnect", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
+
+            CodeBlock block = definition.getBody().get(0);
+            if (!block.getBlockType().equals(BlockType.VOID_METHOD_CALL))
+                return;
+
+            MethodLine line = block.findFirst(m -> m.getOpcode() == Opcode.INVOKESTATIC);
+            CtClass clazz = Mappings.getClazz(line.getClazz());
+            CtMethod logOut = clazz.getMethod(line.getName(), line.getType());
+
+            Mappings.addMethod("logOut", logOut.getName(), logOut.getDeclaringClass().getName(), logOut.getMethodInfo2().getDescriptor());
+
+            MethodDefinition logOutDef = new MethodDefinition(logOut);
+            for (CodeBlock codeBlock : logOutDef.getBody())
+            {
+                if(codeBlock.getBlockType().equals(BlockType.FIELD_STORE))
+                {
+                    FieldLine fieldLine = codeBlock.findFirst(m -> m.hasOpcode(Opcode.PUTSTATIC));
+                    if(fieldLine != null && fieldLine.getType().equals("I"))
+                    {
+                        Mappings.addField("serverCycle", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
+                        break;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void findServerPacketReceiver(CtMethod method)
+    {
+        try
+        {
+            int len = method.getMethodInfo2().getCodeAttribute().getCodeLength();
+            if(len < 18_000 || len > 22_000)
+                return;
+
+            if(!method.getReturnType().getName().equals("boolean"))
+                return;
+
+            Mappings.addMethod("processServerPacket", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
+        }
+        catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
     }
 }

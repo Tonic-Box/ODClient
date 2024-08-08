@@ -3,6 +3,7 @@ package osrs.dev.modder.model;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 import lombok.Getter;
 
 import java.io.File;
@@ -99,5 +100,35 @@ public class Mappings
 
         zos.close();
         System.out.println("Jar output finished. Check path " + path);
+    }
+
+    public static Number getFieldGetter(String obfuClass, String obfuField)
+    {
+        Mapping mapping = mappings.stream()
+                .filter(m -> m.getObfuscatedName().equals(obfuField) && m.getObfuscatedClass().equals(obfuClass))
+                .findFirst()
+                .orElse(null);
+        if(mapping == null)
+        {
+            return 0;
+        }
+        Garbage garb = new Garbage(mapping.getGarbage().getValue(), true);
+        return garb.getGetterValue();
+    }
+
+    public static Number getFieldSetter(String obfuClass, String obfuField)
+    {
+        Mapping mapping = mappings.stream()
+                .filter(m -> m.getObfuscatedName().equals(obfuField) && m.getObfuscatedClass().equals(obfuClass))
+                .findFirst()
+                .orElse(null);
+
+        if(mapping == null)
+        {
+            return 0;
+        }
+
+        Garbage garb = new Garbage(mapping.getGarbage().getValue(), true);
+        return garb.getSetterValue();
     }
 }

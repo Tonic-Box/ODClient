@@ -4,6 +4,7 @@ import javassist.*;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import osrs.dev.annotations.*;
+import osrs.dev.modder.model.Garbage;
 import osrs.dev.modder.model.MappedType;
 import osrs.dev.modder.model.Mapping;
 import osrs.dev.modder.model.Mappings;
@@ -82,6 +83,9 @@ public class Injector
             //Sweet sweet memory reduction
             ClassPool.doPruning = true;
         }
+
+        //Instrument field hooks
+        FieldHookInstrumenter.run();
     }
 
     /**
@@ -292,6 +296,7 @@ public class Injector
 
             if(method.getParameterTypes().length != 0)
             {
+                String garbage = Garbage.getGarbageSetter(mapping);
                 String accessMethod = new MethodBuilder()
                         .generateFromTemplate(method)
                         .Public()
@@ -299,14 +304,15 @@ public class Injector
                         .notFinal()
                         .withName(method.getName())
                         .withArgs(method.getParameterTypes()[0].getName() + " var1")
-                        .withBody("{ " + clazz + mapping.getObfuscatedName() + "=var1; }")
+                        .withBody("{ " + clazz + mapping.getObfuscatedName() + "=var1 " + garbage + "; }")
                         .get();
 
                 insert = CtNewMethod.make(accessMethod, target);
             }
             else
             {
-                String body = "{ return " + clazz + mapping.getObfuscatedName() + "; }";
+                String garbage = Garbage.getGarbageGetter(mapping);
+                String body = "{ return " + clazz + mapping.getObfuscatedName() + garbage + "; }";
                 if(Modifier.isStatic(method.getModifiers()))
                 {
                     insert = CtNewMethod.make("public static " + method.getReturnType().getName() + " " + method.getName() + "()" + body, target);

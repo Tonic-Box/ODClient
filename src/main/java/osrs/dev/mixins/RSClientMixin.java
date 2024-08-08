@@ -1,12 +1,10 @@
 package osrs.dev.mixins;
 
-import osrs.dev.annotations.Inject;
-import osrs.dev.annotations.MethodHook;
-import osrs.dev.annotations.Mixin;
-import osrs.dev.annotations.Shadow;
+import osrs.dev.annotations.*;
 import osrs.dev.api.RSClient;
 import osrs.dev.util.Logger;
 import osrs.dev.util.eventbus.EventBus;
+import osrs.dev.util.eventbus.events.GameTick;
 
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,7 +16,13 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
     private String uid;
 
     @Inject
-    private boolean shouldProcessTick;
+    private static boolean shouldProcessTick;
+
+    @Inject
+    private static int vx$serverTick = 0;
+
+    @Inject
+    public int gametick = 0;
 
     @Inject
     @Override
@@ -33,10 +37,28 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
 
     @MethodHook("doCycle")
     public boolean doCycle() {
+        if(shouldProcessTick)
+        {
+            shouldProcessTick = false;
+            gametick = gametick + 1;
+            EventBus.post(this, new GameTick(gametick));
+        }
         if (queue.peek() != null) {
             queue.poll().run();
         }
 
+        return false;
+    }
+
+    @FieldHook("serverCycle")
+    public static boolean onServerTicksChanged(int cycle)
+    {
+        System.out.println(cycle);
+        if (cycle == vx$serverTick + 1)
+        {
+            shouldProcessTick = true;
+        }
+        vx$serverTick = cycle;
         return false;
     }
 

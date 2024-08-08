@@ -2,9 +2,12 @@ package osrs.dev.modder;
 
 import javassist.*;
 import javassist.bytecode.*;
-import osrs.dev.modder.model.GarbageValue;
-import osrs.dev.modder.model.Mapping;
-import osrs.dev.modder.model.Mappings;
+import osrs.dev.modder.model.*;
+import osrs.dev.modder.model.javassist.Iterator;
+import osrs.dev.modder.model.javassist.instructions.FieldLine;
+import osrs.dev.modder.model.javassist.instructions.InstructionLine;
+import osrs.dev.modder.model.javassist.instructions.ValueLine;
+
 import java.util.*;
 
 public class GarbageScanner
@@ -25,7 +28,43 @@ public class GarbageScanner
                 scanForMethodGarbs(method);
 
                 if(isDone())
-                    return;
+                    break;
+            }
+            if(isDone())
+                break;
+        }
+
+        for(CtClass clazz : Mappings.getClasses())
+        {
+            for(Mapping elem : Mappings.getMappings())
+            {
+                if(elem.isDone() || elem.getGarbage() != null)
+                    continue;
+                if(elem.getType().equals(MappedType.FIELD))
+                {
+                    String type = elem.getDataType();
+                    if(!type.equals("int") && !type.equals("long"))
+                        continue;
+
+                    for(CtMethod method : clazz.getDeclaredMethods())
+                    {
+                        if(!Mappings.getUsedMethods().contains(method.getLongName()))
+                            continue;
+
+                        clazz.defrost();
+                        scanForFieldSetter(method, elem);
+                        if(elem.getGarbage() != null)
+                            break;
+                    }
+
+                    for(CtConstructor constructor : clazz.getDeclaredConstructors())
+                    {
+                        clazz.defrost();
+                        scanForFieldSetter(constructor, elem);
+                        if(elem.getGarbage() != null)
+                            break;
+                    }
+                }
             }
         }
     }
@@ -181,5 +220,84 @@ public class GarbageScanner
         return Mappings.getMappings()
                 .stream()
                 .allMatch(Mapping::isDone);
+    }
+
+    /**
+     * Scans a CtMethod/CtConstructor for any references to a field. This is
+     * namely used by the mapper to assist in finding methods garbage
+     * values and types.
+     * @param method method to scanForFieldSetter
+     * @param element GPMap mapped entry to scanForFieldSetter for
+     */
+    public static <T extends CtBehavior> void scanForFieldSetter(T method, Mapping element)
+    {
+        try
+        {
+            List<InstructionLine> lines = Iterator.run(method);
+            List<ValueLine> values = new ArrayList<>();
+            CodeIterator codeIterator = method.getMethodInfo2().getCodeAttribute().iterator();
+            int i = -1;
+            for(InstructionLine line : lines)
+            {
+                i++;
+                try
+                {
+                    if(line == null)
+                    {
+                        continue;
+                    }
+
+                    if(line.hasOpcode(Opcode.LDC, Opcode.LDC_W, Opcode.LDC2_W) && line instanceof ValueLine)
+                    {
+                        values.add((ValueLine) line);
+                        continue;
+                    }
+
+                    if(!line.hasOpcode(Opcode.PUTFIELD, Opcode.PUTSTATIC) || values.isEmpty())
+                        continue;
+
+                    if(i >= 2 && lines.get(lines.size()-2).getOpcode() == Opcode.ALOAD_0)
+                        continue;
+
+                    FieldLine fieldLine = (FieldLine) line;
+                    if(!fieldLine.getName().equals(element.getObfuscatedName()))
+                        continue;
+
+                    if(!fieldLine.getClazz().equals(element.getObfuscatedClass()) && !fieldLine.fromSuper(element.getObfuscatedClass()))
+                        continue;
+
+                    System.out.println("Mapping " + element.getName() + ": " + fieldLine.toString());
+
+                    //get the garbage value and type
+                    int lastValuePos = values.get(values.size() - 1).getPosition();
+                    GarbageValue loaded = findLoadedValue(codeIterator, method.getMethodInfo2().getConstPool(), lastValuePos);
+                    if(loaded == null)
+                        continue;
+
+                    //store the garbage value
+                    element.setGarbage(loaded);
+                    element.setDone(true);
+                    String alt = "";
+                    try
+                    {
+                        Garbage garb = new Garbage(element.getGarbage().getValue(), true);
+                        if(element.getGarbage().getType() == 'I')
+                            alt = garb.getGetterValue().intValue() + "";
+                        else if(element.getGarbage().getType() == 'J')
+                            alt = garb.getGetterValue().longValue() + "";
+                    }
+                    catch (Exception ignored)
+                    {
+
+                    }
+                    System.out.println("[ScannedFieldGarb] C=" + element.getObfuscatedClass() + ", F=" + element.getName() + " / v(" + element.getGarbage().getType() + ") S=" + element.getGarbage().getValue() + ", G=" + alt + " / Src: " + method.getLongName());
+                    return;
+                }
+                catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+            }
+        }
+        catch (Exception ignored) { }
     }
 }

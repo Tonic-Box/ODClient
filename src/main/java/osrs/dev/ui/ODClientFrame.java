@@ -9,6 +9,7 @@ import osrs.dev.util.ImageUtil;
 import osrs.dev.util.Logger;
 import osrs.dev.util.ThreadPool;
 import osrs.dev.util.eventbus.EventBus;
+import osrs.dev.util.eventbus.events.GameTick;
 import osrs.dev.util.eventbus.events.MenuOptionClicked;
 
 import javax.swing.*;
@@ -178,5 +179,11 @@ public class ODClientFrame extends JFrame {
         if(!logMenuActions)
             return;
         Logger.info("[" + client.getClientID() + "] target=" + event.getTarget() + ", option=" + event.getOption());
+    }
+
+    @Subscribe
+    public void onGameTick(RSClient client, GameTick event)
+    {
+        Logger.info("[" + client.getClientID() + "] tick=" + event.getCount());
     }
 }
