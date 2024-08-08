@@ -27,7 +27,7 @@ public class ODClientFrame extends JFrame {
     public ODClientFrame() {
         setTitle("[ODClient] An Example OSRS Client");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 750);
+        setSize(900, 750);
         setLayout(new BorderLayout());
 
         EventBus.register(this);

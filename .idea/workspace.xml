@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Fixed scrollbar on console">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Added a stats panel that updates/displays various stats about the running jvm">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/FieldHookInstrumenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/FieldHookInstrumenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ImageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ImageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ThreadPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ThreadPool.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,7 +258,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723094604460</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Added a stats panel that updates/displays various stats about the running jvm">
+      <option name="closed" value="true" />
+      <created>1723127554561</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1723127554561</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -295,6 +300,7 @@
     <MESSAGE value="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360" />
     <MESSAGE value="Implemented garbage value scanning for fields, field hooks, and also GameTick event." />
     <MESSAGE value="Fixed scrollbar on console" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed scrollbar on console" />
+    <MESSAGE value="Added a stats panel that updates/displays various stats about the running jvm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a stats panel that updates/displays various stats about the running jvm" />
   </component>
 </project>

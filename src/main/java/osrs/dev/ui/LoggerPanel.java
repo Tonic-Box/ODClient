@@ -270,28 +270,28 @@ public class LoggerPanel extends JPanel {
                 doc.remove(0, doc.getLength()); // Clear the document efficiently
 
                 // Append styled text
-                doc.insertString(doc.getLength(), "PID: ", headStyle);
+                doc.insertString(doc.getLength(), " (PID) ", headStyle);
                 doc.insertString(doc.getLength(), ProcessHandle.current().pid() + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "CPU Usage: ", headStyle);
+                doc.insertString(doc.getLength(), " (CPU Usage) ", headStyle);
                 doc.insertString(doc.getLength(), finalCpu + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "Total Ram: ", headStyle);
+                doc.insertString(doc.getLength(), " (Total Ram) ", headStyle);
                 doc.insertString(doc.getLength(), format.format(Runtime.getRuntime().totalMemory()) + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "Free Ram: ", headStyle);
+                doc.insertString(doc.getLength(), " (Free Ram) ", headStyle);
                 doc.insertString(doc.getLength(), format.format(Runtime.getRuntime().freeMemory()) + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "Used Ram: ", headStyle);
+                doc.insertString(doc.getLength(), " (Used Ram) ", headStyle);
                 doc.insertString(doc.getLength(), format.format(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "Thread Count: ", headStyle);
-                doc.insertString(doc.getLength(), threadMXBean.getThreadCount() + "\n", bodyStyle);
+                doc.insertString(doc.getLength(), " (Active Threads) ", headStyle);
+                doc.insertString(doc.getLength(), Thread.activeCount() + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "Peak Thread Count: ", headStyle);
+                doc.insertString(doc.getLength(), " (Peak Threads) ", headStyle);
                 doc.insertString(doc.getLength(), threadMXBean.getPeakThreadCount() + "\n", bodyStyle);
 
-                doc.insertString(doc.getLength(), "Daemon Thread Count: ", headStyle);
+                doc.insertString(doc.getLength(), " (Daemon Threads) ", headStyle);
                 doc.insertString(doc.getLength(), threadMXBean.getDaemonThreadCount() + "\n", bodyStyle);
 
             } catch (Exception ignored) {
