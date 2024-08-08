@@ -14,12 +14,16 @@ import java.io.File;
 public class Main {
     private static JagConfigUtil config;
     public static final File ODCLIENT_HOME = new File(System.getProperty("user.home") + "/ODClient/");
+    private static ODClientFrame frame;
     public static void main(String[] args) throws Exception {
         OptionsParser.parse(args);
         FlatDarkLaf.setup();
         config = new JagConfigUtil(OptionsParser.getWorld());
         Modder.mod(config.getGamePack());
-        SwingUtilities.invokeLater(ODClientFrame::new);
+        SwingUtilities.invokeLater(() -> {
+            frame = new ODClientFrame();
+            frame.addTab();
+        });
     }
 
     /**

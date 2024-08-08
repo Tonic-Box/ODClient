@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Tweaks to stats panel" />
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Stats panel now displays memory in terms of megabytes rather than bytes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -270,7 +270,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723128698486</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Stats panel now displays memory in terms of megabytes rather than bytes">
+      <option name="closed" value="true" />
+      <created>1723137749421</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1723137749421</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -306,6 +314,7 @@
     <MESSAGE value="Fixed scrollbar on console" />
     <MESSAGE value="Added a stats panel that updates/displays various stats about the running jvm" />
     <MESSAGE value="Tweaks to stats panel" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tweaks to stats panel" />
+    <MESSAGE value="Stats panel now displays memory in terms of megabytes rather than bytes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Stats panel now displays memory in terms of megabytes rather than bytes" />
   </component>
 </project>

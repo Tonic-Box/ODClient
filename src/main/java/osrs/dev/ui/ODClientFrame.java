@@ -89,6 +89,11 @@ public class ODClientFrame extends JFrame {
         setJMenuBar(menuBar);
     }
 
+    public void addTab()
+    {
+        addNewTab("Tab " + (tabbedPane.getTabCount() + 1), Main.getLoader());
+    }
+
     private JTextPane makeLoggerArea()
     {
         JTextPane loggerPanel = new JTextPane() {{
