@@ -4,10 +4,7 @@ import osrs.dev.Main;
 import osrs.dev.annotations.Subscribe;
 import osrs.dev.api.RSClient;
 import osrs.dev.client.Loader;
-import osrs.dev.util.ClientManager;
-import osrs.dev.util.ImageUtil;
-import osrs.dev.util.Logger;
-import osrs.dev.util.ThreadPool;
+import osrs.dev.util.*;
 import osrs.dev.util.eventbus.EventBus;
 import osrs.dev.util.eventbus.events.GameTick;
 import osrs.dev.util.eventbus.events.MenuOptionClicked;
@@ -25,6 +22,7 @@ public class ODClientFrame extends JFrame {
 
     private final JTabbedPane tabbedPane;
     private boolean logMenuActions = false;
+    private boolean logGameTicks = false;
 
     public ODClientFrame() {
         setTitle("[ODClient] An Example OSRS Client");
@@ -43,15 +41,8 @@ public class ODClientFrame extends JFrame {
         tabbedPane.addChangeListener(new TabChangeListener());
         add(tabbedPane, BorderLayout.CENTER);
 
-        JTextPane loggerPane = makeLoggerArea();
-        Logger.setInstance(loggerPane);
-        JScrollPane scroll = new JScrollPane(loggerPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setAutoscrolls(true);
-        scroll.setPreferredSize(new Dimension(800, 150));
-        scroll.setMinimumSize(new Dimension(800, 150));
-        scroll.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        add(scroll, BorderLayout.SOUTH);
+        LoggerPanel loggerPanel = new LoggerPanel();
+        add(loggerPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
@@ -82,10 +73,17 @@ public class ODClientFrame extends JFrame {
         menuBar.add(addTabButton);
 
         JMenu loggingMenu = new JMenu("Logging");
+
         JCheckBoxMenuItem menuActionsCheckbox = new JCheckBoxMenuItem("MenuActions");
         menuActionsCheckbox.setSelected(false);
         menuActionsCheckbox.addActionListener(e -> logMenuActions = menuActionsCheckbox.isSelected());
+
+        JCheckBoxMenuItem gameTicks = new JCheckBoxMenuItem("GameTicks");
+        gameTicks.setSelected(false);
+        gameTicks.addActionListener(e -> logGameTicks = gameTicks.isSelected());
+
         loggingMenu.add(menuActionsCheckbox);
+        loggingMenu.add(gameTicks);
         menuBar.add(loggingMenu);
 
         setJMenuBar(menuBar);
@@ -184,6 +182,8 @@ public class ODClientFrame extends JFrame {
     @Subscribe
     public void onGameTick(RSClient client, GameTick event)
     {
+        if(!logGameTicks)
+            return;
         Logger.info("[" + client.getClientID() + "] tick=" + event.getCount());
     }
 }

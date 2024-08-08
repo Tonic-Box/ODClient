@@ -1,8 +1,11 @@
 package osrs.dev.util;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.util.Objects;
 
 public class ImageUtil
 {
@@ -30,5 +33,17 @@ public class ImageUtil
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * return a scaled ImageIcon
+     * @param c class
+     * @param path resource path
+     * @param size scale size
+     * @return ImageIcon
+     */
+    public static ImageIcon sizedIcon(final Class<?> c, final String path, int size)
+    {
+        return new ImageIcon(Objects.requireNonNull(ImageUtil.loadImageResource(c, path)).getScaledInstance(size, size, Image.SCALE_SMOOTH));
     }
 }

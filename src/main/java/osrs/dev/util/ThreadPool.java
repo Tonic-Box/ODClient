@@ -10,12 +10,12 @@ public class ThreadPool
 {
     private final static ExecutorService executor = Executors.newCachedThreadPool();
 
-    public static Future<?> submit(Runnable runnable)
+    public static void submit(Runnable runnable)
     {
-        return executor.submit(runnable);
+        executor.submit(runnable);
     }
 
-    public static <T> T submit(Supplier<T> supplier)
+    public static <T> T submitReturn(Supplier<T> supplier)
     {
         CompletableFuture<T> future = new CompletableFuture<>();
         Runnable runnable = () -> future.complete(supplier.get());

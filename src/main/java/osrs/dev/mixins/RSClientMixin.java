@@ -53,7 +53,6 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
     @FieldHook("serverCycle")
     public static boolean onServerTicksChanged(int cycle)
     {
-        System.out.println(cycle);
         if (cycle == vx$serverTick + 1)
         {
             shouldProcessTick = true;

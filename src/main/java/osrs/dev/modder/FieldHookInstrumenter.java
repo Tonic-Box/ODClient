@@ -82,7 +82,6 @@ public class FieldHookInstrumenter
                         else
                             setterMethodCall = "if(!$0." + setter.getName() + "($1" + garbVal + ")) { $0." + fieldName + " = $1; }";
 
-                        System.out.println(setterMethodCall);
                         fieldAccess.replace(setterMethodCall);
                     }
                     else if(fieldAccess.isWriter() && !field.getFieldInfo().getDescriptor().contains("[") && entry.isFieldHookAfter())

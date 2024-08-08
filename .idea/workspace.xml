@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Implemented garbage value scanning for fields, field hooks, and also GameTick event.">
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" afterDir="false" />
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Fixed scrollbar on console">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/FieldHookInstrumenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/FieldHookInstrumenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ImageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ImageUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ThreadPool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ThreadPool.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -248,7 +253,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723094272521</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Fixed scrollbar on console">
+      <option name="closed" value="true" />
+      <created>1723094604460</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1723094604460</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -281,6 +294,7 @@
     <MESSAGE value="Improvements to MethodDefinition javassist framework. Will now also, for any static fields, sort out what their initial value is in the scanned model.&#10;&#10;Also added some new mappings, namely Login_username, and Login_password" />
     <MESSAGE value="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360" />
     <MESSAGE value="Implemented garbage value scanning for fields, field hooks, and also GameTick event." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented garbage value scanning for fields, field hooks, and also GameTick event." />
+    <MESSAGE value="Fixed scrollbar on console" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed scrollbar on console" />
   </component>
 </project>
