@@ -277,13 +277,13 @@ public class LoggerPanel extends JPanel {
                 doc.insertString(doc.getLength(), finalCpu + "\n", bodyStyle);
 
                 doc.insertString(doc.getLength(), " (Total Ram) ", headStyle);
-                doc.insertString(doc.getLength(), format.format(Runtime.getRuntime().totalMemory()) + "\n", bodyStyle);
+                doc.insertString(doc.getLength(), format.format(bytesToMegabytes(Runtime.getRuntime().totalMemory())) + "mb\n", bodyStyle);
 
                 doc.insertString(doc.getLength(), " (Free Ram) ", headStyle);
-                doc.insertString(doc.getLength(), format.format(Runtime.getRuntime().freeMemory()) + "\n", bodyStyle);
+                doc.insertString(doc.getLength(), format.format(bytesToMegabytes(Runtime.getRuntime().freeMemory())) + "mb\n", bodyStyle);
 
                 doc.insertString(doc.getLength(), " (Used Ram) ", headStyle);
-                doc.insertString(doc.getLength(), format.format(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + "\n", bodyStyle);
+                doc.insertString(doc.getLength(), format.format(bytesToMegabytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())) + "mb\n", bodyStyle);
 
                 doc.insertString(doc.getLength(), " (Active Threads) ", headStyle);
                 doc.insertString(doc.getLength(), Thread.activeCount() + "\n", bodyStyle);
@@ -297,5 +297,10 @@ public class LoggerPanel extends JPanel {
             } catch (Exception ignored) {
             }
         });
+    }
+
+    public static double bytesToMegabytes(long bytes) {
+        double megabytes = bytes / 1048576.0;
+        return Math.round(megabytes * 1000.0) / 1000.0;
     }
 }

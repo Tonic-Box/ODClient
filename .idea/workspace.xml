@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Added a stats panel that updates/displays various stats about the running jvm">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" afterDir="false" />
-    </list>
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Tweaks to stats panel" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -266,7 +262,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723127554561</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Tweaks to stats panel">
+      <option name="closed" value="true" />
+      <created>1723128698486</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1723128698486</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -301,6 +305,7 @@
     <MESSAGE value="Implemented garbage value scanning for fields, field hooks, and also GameTick event." />
     <MESSAGE value="Fixed scrollbar on console" />
     <MESSAGE value="Added a stats panel that updates/displays various stats about the running jvm" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a stats panel that updates/displays various stats about the running jvm" />
+    <MESSAGE value="Tweaks to stats panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tweaks to stats panel" />
   </component>
 </project>
