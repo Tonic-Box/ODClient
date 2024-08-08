@@ -45,13 +45,13 @@ public class ODClientFrame extends JFrame {
 
         JTextPane loggerPane = makeLoggerArea();
         Logger.setInstance(loggerPane);
-        JScrollPane scroll = new JScrollPane (loggerPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane scroll = new JScrollPane(loggerPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setAutoscrolls(true);
         scroll.setPreferredSize(new Dimension(800, 150));
         scroll.setMinimumSize(new Dimension(800, 150));
         scroll.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        add(loggerPane, BorderLayout.SOUTH);
+        add(scroll, BorderLayout.SOUTH);
 
         setVisible(true);
     }

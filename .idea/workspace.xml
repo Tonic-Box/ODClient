@@ -4,18 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/GarbageScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/GarbageScanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mapping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mapping.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/Mappings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/MethodDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/MethodDefinition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/ODClientFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ArrayUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/ArrayUtil.java" afterDir="false" />
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Implemented garbage value scanning for fields, field hooks, and also GameTick event.">
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,7 +240,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723060709797</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Implemented garbage value scanning for fields, field hooks, and also GameTick event.">
+      <option name="closed" value="true" />
+      <created>1723094272521</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1723094272521</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -282,6 +280,7 @@
     <MESSAGE value="Small bugfix" />
     <MESSAGE value="Improvements to MethodDefinition javassist framework. Will now also, for any static fields, sort out what their initial value is in the scanned model.&#10;&#10;Also added some new mappings, namely Login_username, and Login_password" />
     <MESSAGE value="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360" />
-    <option name="LAST_COMMIT_MESSAGE" value="Made some improvements to the mapping framework, implemented cli args also for setting default world and also for dumping injected gamepack to a path:&#10;&#10;-rsdump SOME_PATH&#10;-world 360" />
+    <MESSAGE value="Implemented garbage value scanning for fields, field hooks, and also GameTick event." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented garbage value scanning for fields, field hooks, and also GameTick event." />
   </component>
 </project>
