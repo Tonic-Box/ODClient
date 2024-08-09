@@ -342,7 +342,8 @@ public class Injector
             Mapping entry = Mappings.findByTag(disableName);
 
             CtMethod targetMethod = null;
-            for(CtMethod elem : target.getDeclaredMethods())
+            CtClass _class = Mappings.getClazz(entry.getObfuscatedClass());
+            for(CtMethod elem : _class.getDeclaredMethods())
             {
                 if(!elem.getName().equals(entry.getObfuscatedName()))
                     continue;
@@ -372,12 +373,19 @@ public class Injector
                 args.setLength(args.length() - 1);
             }
 
-            targetMethod.insertBefore("if(" + method.getName() + args + ")) { return " + ret + "; }");
+            String caller = method.getName() + args + ")";
+            if(!target.getName().equals(_class.getName()))
+            {
+                caller = target.getName() + "." + caller;
+            }
+
+            targetMethod.insertBefore("if(" + caller + ") { return " + ret + "; }");
         }
         catch (Exception ex)
         {
             System.out.println(method.getLongName());
             ex.printStackTrace();
+
         }
     }
 
