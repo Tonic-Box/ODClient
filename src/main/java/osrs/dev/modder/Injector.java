@@ -3,7 +3,7 @@ package osrs.dev.modder;
 import javassist.*;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import osrs.dev.annotations.*;
+import osrs.dev.annotations.mixin.*;
 import osrs.dev.modder.model.Garbage;
 import osrs.dev.modder.model.MappedType;
 import osrs.dev.modder.model.Mapping;

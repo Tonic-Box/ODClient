@@ -1,13 +1,11 @@
 package osrs.dev.mixins;
 
-import osrs.dev.annotations.*;
+import osrs.dev.annotations.mixin.*;
 import osrs.dev.api.RSClient;
-import osrs.dev.util.Logger;
 import osrs.dev.util.eventbus.EventBus;
 import osrs.dev.util.eventbus.events.GameTick;
 
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 
 @Mixin("Client")
 public abstract class RSClientMixin extends RSGameEngineMixin implements RSClient

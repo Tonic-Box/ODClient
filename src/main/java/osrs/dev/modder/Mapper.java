@@ -1,364 +1,232 @@
 package osrs.dev.modder;
 
 import javassist.*;
-import javassist.bytecode.MethodInfo;
-import javassist.bytecode.Opcode;
-import osrs.dev.modder.model.Mapping;
+import osrs.dev.annotations.mapping.MappingSet;
+import osrs.dev.annotations.mapping.Definition;
 import osrs.dev.modder.model.Mappings;
-import osrs.dev.modder.model.javassist.CodeBlock;
-import osrs.dev.modder.model.javassist.MethodDefinition;
-import osrs.dev.modder.model.javassist.enums.BlockType;
-import osrs.dev.modder.model.javassist.instructions.FieldLine;
-import osrs.dev.modder.model.javassist.instructions.InstructionLine;
-import osrs.dev.modder.model.javassist.instructions.MethodLine;
-import osrs.dev.modder.model.javassist.instructions.ValueLine;
-import osrs.dev.util.ArrayUtil;
-import osrs.dev.util.modding.CodeUtil;
-
+import osrs.dev.util.Introspection;
+import osrs.dev.util.SignatureUtil;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class Mapper
 {
+    private static final Set<Method> classMappings = new HashSet<>();
+    private static final Set<Method> methodMappings = new HashSet<>();
+    private static final Set<Method> fieldMappings = new HashSet<>();
+    private static final Set<Method> afterClassMappings = new HashSet<>();
+    private static final Set<Method> afterMethodMappings = new HashSet<>();
+    private static final Set<Method> afterFieldMappings = new HashSet<>();
+    private static final Map<String,String[]> targets = new HashMap<>();
+    private static final Map<String,String[]> afterTargets = new HashMap<>();
+
+
     /**
      * handles finding our mappings
      */
     public static void map()
     {
+        loadMappingDefinitions();
+
+        //round 1
         for(CtClass clazz : Mappings.getClasses())
         {
             clazz.defrost();
-            findClient(clazz);
 
+            classMappings.forEach(m -> callClassScanner(m, clazz));
             for(CtMethod method : clazz.getDeclaredMethods())
             {
                 if(!Mappings.getUsedMethods().contains(method.getLongName()))
                     continue;
-                findDoAction(method);
-                findGetDeviceId(method);
-                mapLoginUsername(method);
-                findLogoutStuff(method);
+                methodMappings.forEach(m -> callMethodScanner(m, method));
             }
 
             for(CtField field : clazz.getDeclaredFields())
             {
-                findClientField(field);
+                fieldMappings.forEach(m -> callFieldScanner(m, field));
             }
         }
-    }
 
-    private static void mapLoginUsername(CtMethod method)
-    {
-        if(Mappings.findByTag("Login_username") != null)
-            return;
-
-        MethodDefinition definition = new MethodDefinition(method);
-        if(!definition.containsBlockWithValue("Please enter your username/email address."))
-            return;
-
-        Mappings.addClass("Login", method.getDeclaringClass().getName());
-
-        MethodLine updateGameState;
-        FieldLine fieldLine;
-        String username = null;
-        for(CodeBlock block : definition.getBody())
+        //round 2
+        for(CtClass clazz : Mappings.getClasses())
         {
-            if(block.hasMethodCall("java.lang.String", "trim", "()Ljava/lang/String;"))
-            {
-                fieldLine = block.findFirst(m -> m.getOpcode() == Opcode.GETSTATIC);
-                if(fieldLine != null)
-                {
-                    Mappings.addField("Login_username", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-                    username = fieldLine.getName();
-                }
-            }
-            else if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
-            {
-                String finalUsername = username;
-                FieldLine methodLine = block.findFirst(m -> {
-                    if(m.getOpcode() != Opcode.GETSTATIC)
-                        return false;
+            clazz.defrost();
 
-                    FieldLine line = m.transpose();
-                    return !line.getName().equals(finalUsername);
-                });
-                if(methodLine != null)
-                {
-                    Mappings.addField("Login_password", methodLine.getName(), methodLine.getClazz(), methodLine.getType());
-                }
-            }
-            else if(block.findFirst(i -> {
-                if(!(i instanceof ValueLine))
-                    return false;
-
-                ValueLine line = i.transpose();
-                if(!(line.getValue() instanceof Number))
-                    return false;
-
-                return ((int)line.getValue()) == 20;
-            }) != null)
-            {
-                updateGameState = block.findFirst(m -> m instanceof MethodLine);
-                if(updateGameState == null)
-                    continue;
-
-                Mappings.addMethod("updateGameState", updateGameState.getName(), updateGameState.getClazz(), updateGameState.getType());
-            }
-        }
-    }
-
-    public static void findGetDeviceId(CtMethod method)
-    {
-        if(Mappings.findByTag("getDeviceId") != null)
-            return;
-
-        try
-        {
-            MethodDefinition methodDefinition = new MethodDefinition(method);
-
-            for(CodeBlock block : methodDefinition.getBody())
-            {
-                if(!block.getBlockType().equals(BlockType.LOCAL_STORE))
-                    continue;
-
-                if(!block.containsValue("12345678-0000-0000-0000-123456789012"))
-                    continue;
-
-                Mappings.addMethod("getDeviceId", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
-                Mappings.addClass("PlatformInfo", method.getDeclaringClass().getName());
-                return;
-            }
-        }
-        catch (Exception ignored)
-        {
-        }
-    }
-
-    private static void findClientField(CtField field)
-    {
-        if(Mappings.findByTag("clientField") != null)
-            return;
-
-        try
-        {
-            if(field.getType().getName().equals("client"))
-            {
-                Mappings.addField("clientField", field.getName(), field.getDeclaringClass().getName(), field.getFieldInfo2().getDescriptor());
-            }
-        }
-        catch (Exception ignored) {}
-    }
-
-    private static void findClient(CtClass clazz)
-    {
-        if(Mappings.findByTag("Client") != null)
-            return;
-        try
-        {
-            if(!clazz.getName().equals("client"))
-                return;
-            Mappings.addClass("Client", clazz.getName());
-
-            CtClass gameEngine = clazz.getSuperclass();
-            Mappings.addClass("GameEngine", gameEngine.getName());
-            findGraphicsTick(gameEngine);
-            findRunAndStuff(gameEngine);
-            findJagAuthStuff(clazz);
+            afterClassMappings.forEach(m -> callClassScanner(m, clazz));
             for(CtMethod method : clazz.getDeclaredMethods())
             {
-                findServerPacketReceiver(method);
+                if(!Mappings.getUsedMethods().contains(method.getLongName()))
+                    continue;
+                afterMethodMappings.forEach(m -> callMethodScanner(m, method));
+            }
+
+            for(CtField field : clazz.getDeclaredFields())
+            {
+                afterFieldMappings.forEach(m -> callFieldScanner(m, field));
             }
         }
-        catch (Exception ignored) {
+
+        boolean pass = true;
+
+        for(var entry : targets.entrySet())
+        {
+            String source = entry.getKey();
+            for(String mapping : entry.getValue())
+            {
+                if(Mappings.findByTag(mapping) != null)
+                    continue;
+
+                System.err.println("[Missing Mapping (pre)] " + source + " > \"" + mapping + "\"");
+                pass = false;
+            }
         }
+
+        for(var entry : afterTargets.entrySet())
+        {
+            String source = entry.getKey();
+            for(String mapping : entry.getValue())
+            {
+                if(Mappings.findByTag(mapping) != null)
+                    continue;
+
+                System.err.println("[Missing Mapping (post)] " + source + " > \"" + mapping + "\"");
+                pass = false;
+            }
+        }
+
+        if(!pass)
+        {
+            System.exit(0);
+        }
+
+        classMappings.clear();
+        methodMappings.clear();
+        fieldMappings.clear();
+        afterClassMappings.clear();
+        afterMethodMappings.clear();
+        afterFieldMappings.clear();
+        targets.clear();
+        afterTargets.clear();
     }
 
-    public static void findJagAuthStuff(CtClass clazz) throws Exception
+    private static void loadMappingDefinitions()
     {
-        CtMethod init = clazz.getMethod("init", "()V");
-        Mappings.addMethodNoGarbage("init", init.getName(), clazz.getName(), init.getMethodInfo2().getDescriptor());
-        MethodDefinition definition = new MethodDefinition(init);
-        FieldLine fieldLine;
-        for(CodeBlock block : definition.getBody())
+        List<Class<?>> mappingDefinitions = Introspection.getClasses("osrs.dev.mappings", new ArrayList<>());
+        for(Class<?> clazz : mappingDefinitions)
         {
-            fieldLine = block.findFirst(i -> i instanceof FieldLine);
-            if(block.containsValue("JX_ACCESS_TOKEN"))
+            if(!clazz.isAnnotationPresent(MappingSet.class))
+                continue;
+            for(Method method : clazz.getDeclaredMethods())
             {
-                Mappings.addField("JX_ACCESS_TOKEN", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-            }
-            else if(block.containsValue("JX_REFRESH_TOKEN"))
-            {
-                Mappings.addField("JX_REFRESH_TOKEN", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-            }
-            else if(block.containsValue("JX_SESSION_ID"))
-            {
-                Mappings.addField("JX_SESSION_ID", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-            }
-            else if(block.containsValue("JX_CHARACTER_ID"))
-            {
-                Mappings.addField("JX_CHARACTER_ID", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-            }
-            else if(block.containsValue("JX_DISPLAY_NAME"))
-            {
-                MethodLine methodLine = block.findFirst(line -> line.hasOpcode(Opcode.INVOKESTATIC) && !((MethodLine)line).getName().equals("getenv"));
-                CtClass _clazz = Mappings.getClazz(methodLine.getClazz());
-                CtMethod method = _clazz.getMethod(methodLine.getName(), methodLine.getType());
-                MethodDefinition methodDefinition = new MethodDefinition(method);
-                for(CodeBlock block1 : methodDefinition.getBody())
+                if(!method.isAnnotationPresent(Definition.class))
+                    continue;
+
+                if(method.getParameterTypes().length != 1)
+                    continue;
+
+                Definition definition = method.getAnnotation(Definition.class);
+                if(definition != null)
                 {
-                    if(!block1.getBlockType().equals(BlockType.FIELD_STORE))
-                        continue;
-                    fieldLine = block1.findFirst(i -> i.getOpcode() == Opcode.PUTSTATIC);
-                    Mappings.addField("JX_DISPLAY_NAME", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-                }
-            }
-        }
-    }
-
-    public static void findRunAndStuff(CtClass clazz) throws Exception
-    {
-        if(Mappings.findByTag("run") != null)
-            return;
-
-        CtMethod run = clazz.getMethod("run", "()V");
-        Mappings.addMethodNoGarbage("run", run.getName(), clazz.getName(), run.getMethodInfo2().getDescriptor());
-        Mapping mapping = Mappings.findByTag("graphicsTick");
-        String name = mapping.getObfuscatedName();
-        String descriptor = mapping.getDescriptor();
-        List<CtMethod> methods = new ArrayList<>();
-        CodeUtil.scanForMethodRefs(run, methods);
-        CtMethod clientTick = null;
-        for(int i = 0; i < methods.size(); i++)
-        {
-            if(name.equals(methods.get(i).getName()) && descriptor.equals(methods.get(i).getMethodInfo2().getDescriptor()))
-            {
-                clientTick = methods.get(i - 1);
-                break;
-            }
-        }
-        if(clientTick == null)
-        {
-            throw new NotFoundException("ClientTick not found");
-        }
-        Mappings.addMethod("clientTick", clientTick.getName(), clazz.getName(), clientTick.getMethodInfo2().getDescriptor());
-
-        methods.clear();
-        CodeUtil.scanForMethodRefs(clientTick, methods);
-
-        for(CtMethod method : methods)
-        {
-            if(!method.getDeclaringClass().getName().equals("client"))
-                continue;
-            Mappings.addMethod("doCycle", method.getName(), "client", method.getMethodInfo2().getDescriptor());
-            break;
-        }
-    }
-
-    private static void findGraphicsTick(CtClass clazz) throws Exception
-    {
-        for(CtMethod method : clazz.getDeclaredMethods())
-        {
-            int mod = method.getModifiers();
-            if(Modifier.isAbstract(mod))
-                continue;
-
-            if(!method.getReturnType().getName().equals("void"))
-                continue;
-
-            if(Modifier.isStatic(mod))
-                continue;
-
-            if(method.getParameterTypes().length != 1)
-                continue;
-
-            int length = method.getMethodInfo2().getCodeAttribute().getCodeLength();
-            if(length < 420 || length > 475)
-                continue;
-
-            Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
-        }
-    }
-
-
-
-    private static void findDoAction(CtMethod method)
-    {
-        if(Mappings.findByTag("menuAction") != null)
-            return;
-
-        MethodInfo info = method.getMethodInfo2();
-        if(!info.getDescriptor().startsWith("(IIIIIILjava/lang/String;Ljava/lang/String;II") || !info.getDescriptor().endsWith(")V"))
-            return;
-
-        if(info.getCodeAttribute().getCodeLength() < 5000)
-            return;
-
-        Mappings.addMethod("menuAction", method.getName(), method.getDeclaringClass().getName(), info.getDescriptor());
-    }
-
-    public static void findLogoutStuff(CtMethod method)
-    {
-        try {
-            if (!method.getLongName().startsWith("cr.ho(") || !method.getMethodInfo2().getDescriptor().equals("(IB)V"))
-                return;
-
-            MethodDefinition definition = new MethodDefinition(method);
-            boolean pass = false;
-            for (CodeBlock block : definition.getBody()) {
-                if (block.containsValue("The game servers are currently being updated.")) {
-                    pass = true;
-                    break;
-                }
-            }
-            if (!pass)
-                return;
-
-            Mappings.addMethod("forceDisconnect", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
-
-            CodeBlock block = definition.getBody().get(0);
-            if (!block.getBlockType().equals(BlockType.VOID_METHOD_CALL))
-                return;
-
-            MethodLine line = block.findFirst(m -> m.getOpcode() == Opcode.INVOKESTATIC);
-            CtClass clazz = Mappings.getClazz(line.getClazz());
-            CtMethod logOut = clazz.getMethod(line.getName(), line.getType());
-
-            Mappings.addMethod("logOut", logOut.getName(), logOut.getDeclaringClass().getName(), logOut.getMethodInfo2().getDescriptor());
-
-            MethodDefinition logOutDef = new MethodDefinition(logOut);
-            for (CodeBlock codeBlock : logOutDef.getBody())
-            {
-                if(codeBlock.getBlockType().equals(BlockType.FIELD_STORE))
-                {
-                    FieldLine fieldLine = codeBlock.findFirst(m -> m.hasOpcode(Opcode.PUTSTATIC));
-                    if(fieldLine != null && fieldLine.getType().equals("I"))
+                    if(definition.secondary())
                     {
-                        Mappings.addField("serverCycle", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-                        break;
+                        if(scannerTypeOf(method, CtClass.class))
+                        {
+                            afterClassMappings.add(method);
+                            afterTargets.put(clazz.getName() + "::" + method.getName() + SignatureUtil.getMethodSignature(method), definition.targets());
+                        }
+                        else if(scannerTypeOf(method, CtMethod.class))
+                        {
+                            afterMethodMappings.add(method);
+                            afterTargets.put(clazz.getName() + "::" + method.getName() + SignatureUtil.getMethodSignature(method), definition.targets());
+                        }
+                        else if(scannerTypeOf(method, CtField.class))
+                        {
+                            afterFieldMappings.add(method);
+                            afterTargets.put(clazz.getName() + "::" + method.getName() + SignatureUtil.getMethodSignature(method), definition.targets());
+                        }
+                    }
+                    else
+                    {
+                        if(scannerTypeOf(method, CtClass.class))
+                        {
+                            classMappings.add(method);
+                            targets.put(clazz.getSimpleName() + "::" + method.getName() + SignatureUtil.getMethodSignature(method), definition.targets());
+                        }
+                        else if(scannerTypeOf(method, CtMethod.class))
+                        {
+                            methodMappings.add(method);
+                            targets.put(clazz.getSimpleName() + "::" + method.getName() + SignatureUtil.getMethodSignature(method), definition.targets());
+                        }
+                        else if(scannerTypeOf(method, CtField.class))
+                        {
+                            fieldMappings.add(method);
+                            targets.put(clazz.getSimpleName() + "::" + method.getName() + SignatureUtil.getMethodSignature(method), definition.targets());
+                        }
                     }
                 }
             }
         }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
+    }
+
+    private static boolean scannerTypeOf(Method method, Class<?> type) {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        if (parameterTypes.length == 1) {
+            return type.isAssignableFrom(parameterTypes[0]);
+        }
+        return false;
+    }
+
+    /**
+     * Invokes a static void method with a CtClass as the parameter.
+     *
+     * @param method The static method to be invoked.
+     * @param ctClass The CtClass instance to be passed as the parameter.
+     */
+    private static void callClassScanner(Method method, CtClass ctClass) {
+        try {
+            // Ensure the method is static
+            if (!java.lang.reflect.Modifier.isStatic(method.getModifiers())) {
+                throw new IllegalArgumentException("The provided method is not static.");
+            }
+
+            // Invoke the static void method with the CtClass parameter
+            method.invoke(null, ctClass);
+
+        } catch (Exception ignored) {
         }
     }
 
-    public static void findServerPacketReceiver(CtMethod method)
-    {
-        try
-        {
-            int len = method.getMethodInfo2().getCodeAttribute().getCodeLength();
-            if(len < 18_000 || len > 22_000)
-                return;
+    /**
+     * Invokes a static void method with a CtMethod as the parameter.
+     *
+     * @param method The static method to be invoked.
+     * @param ctMethod The CtMethod instance to be passed as the parameter.
+     */
+    private static void callMethodScanner(Method method, CtMethod ctMethod) {
+        try {
+            // Ensure the method is static
+            if (!java.lang.reflect.Modifier.isStatic(method.getModifiers())) {
+                throw new IllegalArgumentException("The provided method is not static.");
+            }
 
-            if(!method.getReturnType().getName().equals("boolean"))
-                return;
+            // Invoke the static void method with the CtMethod parameter
+            method.invoke(null, ctMethod);
 
-            Mappings.addMethod("processServerPacket", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored) {
-            ignored.printStackTrace();
+    }
+
+    private static void callFieldScanner(Method method, CtField ctField) {
+        try {
+            // Ensure the method is static
+            if (!java.lang.reflect.Modifier.isStatic(method.getModifiers())) {
+                throw new IllegalArgumentException("The provided method is not static.");
+            }
+
+            // Invoke the static void method with the CtMethod parameter
+            method.invoke(null, ctField);
+
+        } catch (Exception ignored) {
         }
     }
 }

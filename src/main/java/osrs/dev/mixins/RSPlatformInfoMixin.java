@@ -1,10 +1,10 @@
 package osrs.dev.mixins;
 
 import osrs.dev.Main;
-import osrs.dev.annotations.Inject;
-import osrs.dev.annotations.Mixin;
-import osrs.dev.annotations.Replace;
-import osrs.dev.annotations.Shadow;
+import osrs.dev.annotations.mixin.Inject;
+import osrs.dev.annotations.mixin.Mixin;
+import osrs.dev.annotations.mixin.Replace;
+import osrs.dev.annotations.mixin.Shadow;
 import osrs.dev.api.RSClient;
 
 import java.io.*;

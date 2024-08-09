@@ -1,14 +1,11 @@
 package osrs.dev.mixins;
 
-import osrs.dev.annotations.Inject;
-import osrs.dev.annotations.MethodHook;
-import osrs.dev.annotations.Mixin;
-import osrs.dev.api.RSClient;
+import osrs.dev.annotations.mixin.Inject;
+import osrs.dev.annotations.mixin.MethodHook;
+import osrs.dev.annotations.mixin.Mixin;
 import osrs.dev.api.RSGameEngine;
-import osrs.dev.util.eventbus.EventBus;
 
 import java.applet.Applet;
-import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 
 @Mixin("GameEngine")

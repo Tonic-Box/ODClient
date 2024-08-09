@@ -6,11 +6,12 @@ import javassist.CtField;
 import javassist.CtMethod;
 import javassist.bytecode.ClassFile;
 import lombok.SneakyThrows;
-import osrs.dev.annotations.Mixin;
+import osrs.dev.annotations.mixin.Mixin;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.util.jar.JarFile;
@@ -29,8 +30,8 @@ public class Introspection
 
         //get all classes from out mixin scope and from out interface scope
         List<String> ignores = new ArrayList<>() {{ add("MixinInjector"); }};
-        List<CtClass> interfaces = getClasses(interfacePackage, ignores);
-        List<CtClass> mixins = getClasses(mixinPackage, ignores);
+        List<CtClass> interfaces = getCtClasses(interfacePackage, ignores);
+        List<CtClass> mixins = getCtClasses(mixinPackage, ignores);
 
         if(interfaces.isEmpty() || mixins.isEmpty())
             return pairs;
@@ -85,7 +86,7 @@ public class Introspection
      * @param ignores class names to ignore
      * @return list of CtClass objects from package
      */
-    public static List<CtClass> getClasses(String packageName, List<String> ignores)
+    public static List<CtClass> getCtClasses(String packageName, List<String> ignores)
     {
 
         try
@@ -98,11 +99,11 @@ public class Introspection
                     .getPath();
             if(jarPath.endsWith(".jar"))
             {
-                return Introspection.getClassesExternal(packageName, ignores);
+                return Introspection.getCtClassesExternal(packageName, ignores);
             }
             else
             {
-                return Introspection.getClassesIntelliJ(packageName, ignores);
+                return Introspection.getCtClassesIntelliJ(packageName, ignores);
             }
 
         }
@@ -118,7 +119,7 @@ public class Introspection
      * @param ignores class names to ignore
      * @return list of CtClass objects from package
      */
-    public static List<CtClass> getClassesExternal(String packageName, List<String> ignores)
+    public static List<CtClass> getCtClassesExternal(String packageName, List<String> ignores)
     {
         List<CtClass> classes = new ArrayList<>();
         try
@@ -155,7 +156,7 @@ public class Introspection
      * @param ignores class names to ignore
      * @return list of CtClass objects from package
      */
-    public static List<CtClass> getClassesIntelliJ(String packageName, List<String> ignores) {
+    public static List<CtClass> getCtClassesIntelliJ(String packageName, List<String> ignores) {
         List<CtClass> classes = new ArrayList<>();
         try
         {
@@ -191,6 +192,122 @@ public class Introspection
                     classes.add(ClassPool.getDefault().makeClass(cf));
                 } catch (Exception e) {
                     //e.printStackTrace();
+                }
+            }
+        }
+        return classes;
+    }
+
+    /**
+     * Retrieves all classes from a specified package.
+     *
+     * @param packageName The package name to search for classes.
+     * @param ignores     List of class names to ignore during retrieval.
+     * @return A list of Class<?> objects representing the classes found in the specified package.
+     */
+    public static List<Class<?>> getClasses(String packageName, List<String> ignores) {
+        try {
+            String jarPath = Introspection.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI()
+                    .getPath();
+            if (jarPath.endsWith(".jar")) {
+                return getClassesExternal(packageName, ignores);
+            } else {
+                return getClassesIntelliJ(packageName, ignores);
+            }
+        } catch (URISyntaxException ignored) {
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * Retrieves all classes from a specified package when running from a JAR file.
+     *
+     * @param packageName The package name to search for classes.
+     * @param ignores     List of class names to ignore during retrieval.
+     * @return A list of Class<?> objects representing the classes found in the specified package.
+     */
+    public static List<Class<?>> getClassesExternal(String packageName, List<String> ignores) {
+        List<Class<?>> classes = new ArrayList<>();
+        try {
+            String jarPath = Introspection.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .toURI()
+                    .getPath();
+            String finalPackageName = packageName.replace(".", "/") + "/";
+            File file = new File(jarPath);
+            JarFile jar = new JarFile(file);
+            Collections.list(jar.entries()).forEach(e -> {
+                if (e.getName().startsWith(finalPackageName) && !e.getName().replace(finalPackageName, "").contains("/") && e.getName().endsWith(".class")) {
+                    if (ignores == null || ignores.stream().noneMatch(s -> e.getName().contains(s))) {
+                        try {
+                            String className = e.getName().replace("/", ".").replace(".class", "");
+                            classes.add(Class.forName(className));
+                        } catch (ClassNotFoundException | NoClassDefFoundError ignored) { }
+                    }
+                }
+            });
+        } catch (URISyntaxException | IOException ignored) {
+        }
+        return classes;
+    }
+
+    /**
+     * Retrieves all classes from a specified package when running from IntelliJ or a development environment.
+     *
+     * @param packageName The package name to search for classes.
+     * @param ignores     List of class names to ignore during retrieval.
+     * @return A list of Class<?> objects representing the classes found in the specified package.
+     */
+    public static List<Class<?>> getClassesIntelliJ(String packageName, List<String> ignores) {
+        List<Class<?>> classes = new ArrayList<>();
+        try {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            String path = packageName.replace('.', '/');
+            Enumeration<URL> resources = classLoader.getResources(path);
+            List<File> dirs = new ArrayList<>();
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
+                dirs.add(new File(resource.toURI()));
+            }
+            for (File directory : dirs) {
+                classes.addAll(findClasses(directory, packageName, ignores));
+            }
+        } catch (URISyntaxException | IOException ignored) {
+        }
+        return classes;
+    }
+
+    /**
+     * Recursively finds all classes within a directory.
+     *
+     * @param directory   The directory to search for classes.
+     * @param packageName The package name associated with the directory.
+     * @param ignores     List of class names to ignore during retrieval.
+     * @return A list of Class<?> objects representing the classes found in the directory.
+     */
+    private static List<Class<?>> findClasses(File directory, String packageName, List<String> ignores) {
+        List<Class<?>> classes = new ArrayList<>();
+        if (!directory.exists()) {
+            return classes;
+        }
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return classes;
+        }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                classes.addAll(findClasses(file, packageName + "." + file.getName(), ignores));
+            } else if (file.getName().endsWith(".class") && (ignores == null || ignores.stream().noneMatch(s -> file.getName().contains(s)))) {
+                try {
+                    String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
+                    classes.add(Class.forName(className));
+                } catch (ClassNotFoundException | NoClassDefFoundError ignored) {
                 }
             }
         }

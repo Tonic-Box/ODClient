@@ -1,8 +1,8 @@
 package osrs.dev.mixins;
 
-import osrs.dev.annotations.MethodHook;
-import osrs.dev.annotations.Mixin;
-import osrs.dev.annotations.Shadow;
+import osrs.dev.annotations.mixin.MethodHook;
+import osrs.dev.annotations.mixin.Mixin;
+import osrs.dev.annotations.mixin.Shadow;
 import osrs.dev.api.RSClient;
 import osrs.dev.util.eventbus.EventBus;
 import osrs.dev.util.eventbus.events.MenuOptionClicked;

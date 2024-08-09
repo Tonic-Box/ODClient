@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Stats panel now displays memory in terms of megabytes rather than bytes" />
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Now initially spawns a tab on load">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/FieldHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/mixin/FieldHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/Inject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/mixin/Inject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/MethodHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/mixin/MethodHook.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/Mixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/mixin/Mixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/Replace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/mixin/Replace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/Shadow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/annotations/mixin/Shadow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSDoActionMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSDoActionMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSGameEngineMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSGameEngineMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSPlatformInfoMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSPlatformInfoMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/util/Introspection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/util/Introspection.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,6 +57,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.0"
@@ -278,7 +295,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723137749421</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Now initially spawns a tab on load">
+      <option name="closed" value="true" />
+      <created>1723137916495</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1723137916495</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -315,6 +340,7 @@
     <MESSAGE value="Added a stats panel that updates/displays various stats about the running jvm" />
     <MESSAGE value="Tweaks to stats panel" />
     <MESSAGE value="Stats panel now displays memory in terms of megabytes rather than bytes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Stats panel now displays memory in terms of megabytes rather than bytes" />
+    <MESSAGE value="Now initially spawns a tab on load" />
+    <option name="LAST_COMMIT_MESSAGE" value="Now initially spawns a tab on load" />
   </component>
 </project>

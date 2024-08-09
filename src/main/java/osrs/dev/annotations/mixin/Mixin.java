@@ -1,4 +1,4 @@
-package osrs.dev.annotations;
+package osrs.dev.annotations.mixin;
 
 public @interface Mixin {
     String value();
