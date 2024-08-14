@@ -145,30 +145,39 @@ public class Injector
 
     private static void processMethod(CtClass target, CtMethod method) throws Exception {
         target.defrost();
-        if(Introspection.has(method, Inject.class))
+        try
         {
-            injectMethod(target, method);
+            if(Introspection.has(method, Inject.class))
+            {
+                injectMethod(target, method);
+            }
+
+            if(Introspection.has(method, MethodHook.class))
+            {
+                methodHook(target, method);
+            }
+
+            if(Introspection.has(method, Shadow.class))
+            {
+                shadow(target, method);
+            }
+
+            if(Introspection.has(method, Replace.class))
+            {
+                replace(target, method);
+            }
+
+            if(Introspection.has(method, FieldHook.class))
+            {
+                fieldHook(target, method);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.out.println("[InjectorException] " + method.getLongName());
+            ex.printStackTrace();
         }
 
-        if(Introspection.has(method, MethodHook.class))
-        {
-            methodHook(target, method);
-        }
-
-        if(Introspection.has(method, Shadow.class))
-        {
-            shadow(target, method);
-        }
-
-        if(Introspection.has(method, Replace.class))
-        {
-            replace(target, method);
-        }
-
-        if(Introspection.has(method, FieldHook.class))
-        {
-            fieldHook(target, method);
-        }
     }
 
     public static void fieldHook(CtClass target, CtMethod method)
@@ -283,6 +292,7 @@ public class Injector
                     .withBody("{ " + (returnType.equals("void") ? "" : "return ") + clazz + targetMethod.getName() + "(" + callParams + "); }")
                     .get();
 
+            System.out.println(accessMethod);
             CtMethod accessible = CtNewMethod.make(accessMethod, target);
             target.addMethod(accessible);
         }

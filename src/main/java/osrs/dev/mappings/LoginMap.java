@@ -33,9 +33,10 @@ public class LoginMap
             MethodLine updateGameState;
             FieldLine fieldLine;
             String username = null;
+            String password = null;
             for(CodeBlock block : definition.getBody())
             {
-                if(block.hasMethodCall("java.lang.String", "trim", "()Ljava/lang/String;"))
+                if(block.hasMethodCall("java.lang.String", "trim", "()Ljava/lang/String;") && username == null)
                 {
                     fieldLine = block.findFirst(m -> m.getOpcode() == Opcode.GETSTATIC);
                     if(fieldLine != null)
@@ -44,19 +45,20 @@ public class LoginMap
                         username = fieldLine.getName();
                     }
                 }
-                else if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
+                else if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null && password == null)
                 {
                     String finalUsername = username;
-                    FieldLine methodLine = block.findFirst(m -> {
+                    FieldLine fLine = block.findFirst(m -> {
                         if(m.getOpcode() != Opcode.GETSTATIC)
                             return false;
 
                         FieldLine line = m.transpose();
                         return !line.getName().equals(finalUsername);
                     });
-                    if(methodLine != null)
+                    if(fLine != null)
                     {
-                        Mappings.addField("Login_password", methodLine.getName(), methodLine.getClazz(), methodLine.getType());
+                        password = fLine.getName();
+                        Mappings.addField("Login_password", fLine.getName(), fLine.getClazz(), fLine.getType());
                     }
                 }
                 else if(block.findFirst(i -> {
@@ -80,8 +82,6 @@ public class LoginMap
         }
         catch (Exception ex)
         {
-            ex.printStackTrace();
-            System.exit(0);
         }
     }
 

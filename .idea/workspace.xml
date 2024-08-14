@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="no-op random.dat read/write">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="few mapping fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/RandomDatMap.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSRandomDatMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -308,7 +310,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723189122130</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="few mapping fixes">
+      <option name="closed" value="true" />
+      <created>1723664999398</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1723664999398</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -323,7 +333,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="initial push" />
     <MESSAGE value="mapps client field now. added prelude to a client manager." />
     <MESSAGE value="Added window icon. implemented usable api and a ClientManager that keeps track of the RSClient objects, and also which one is currently visible/tabbed in. Tabbed-out clients now no-op their rendering for cpu usage save." />
     <MESSAGE value="Implemented proper cleanup of closed client objects." />
@@ -348,6 +357,7 @@
     <MESSAGE value="Now initially spawns a tab on load" />
     <MESSAGE value="Cleaned up and redesigned how mapping definitions are written and stored etc. Also now implemented in a way where if a mapping is ever not found that's expected, it will let you know." />
     <MESSAGE value="no-op random.dat read/write" />
-    <option name="LAST_COMMIT_MESSAGE" value="no-op random.dat read/write" />
+    <MESSAGE value="few mapping fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="few mapping fixes" />
   </component>
 </project>
