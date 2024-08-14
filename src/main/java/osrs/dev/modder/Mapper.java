@@ -213,6 +213,7 @@ public class Mapper
             method.invoke(null, ctMethod);
 
         } catch (Exception ignored) {
+            System.err.println("[MappingException] Exception thrown in " + method.getName());
         }
     }
 

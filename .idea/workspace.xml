@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Cleaned up and redesigned how mapping definitions are written and stored etc. Also now implemented in a way where if a mapping is ever not found that's expected, it will let you know.">
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="no-op random.dat read/write">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Mapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/model/javassist/CodeBlock.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,7 +300,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723188163463</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="no-op random.dat read/write">
+      <option name="closed" value="true" />
+      <created>1723189122130</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1723189122130</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -337,6 +347,7 @@
     <MESSAGE value="Stats panel now displays memory in terms of megabytes rather than bytes" />
     <MESSAGE value="Now initially spawns a tab on load" />
     <MESSAGE value="Cleaned up and redesigned how mapping definitions are written and stored etc. Also now implemented in a way where if a mapping is ever not found that's expected, it will let you know." />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up and redesigned how mapping definitions are written and stored etc. Also now implemented in a way where if a mapping is ever not found that's expected, it will let you know." />
+    <MESSAGE value="no-op random.dat read/write" />
+    <option name="LAST_COMMIT_MESSAGE" value="no-op random.dat read/write" />
   </component>
 </project>

@@ -1,5 +1,6 @@
 package osrs.dev.modder.model.javassist;
 
+import javassist.bytecode.Opcode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import osrs.dev.modder.model.javassist.enums.BlockType;
@@ -48,11 +49,15 @@ public class CodeBlock {
     {
         for(InstructionLine line : getInstructions())
         {
-            if(!(line instanceof MethodLine))
+            if(!line.hasOpcode(Opcode.INVOKEVIRTUAL, Opcode.INVOKESTATIC, Opcode.INVOKESPECIAL, Opcode.INVOKEINTERFACE, Opcode.INVOKEDYNAMIC))
                 continue;
 
             MethodLine methodLine = line.transpose();
-            if(!methodLine.getName().equals(methodName) || !methodLine.getClazz().equals(methodClassName) || !methodLine.getType().equals(descriptor))
+//            System.out.println();
+//            System.out.println("Class: " + methodLine.getClazz() + " : " + methodClassName);
+//            System.out.println("name: " + methodLine.getName() + " : " + methodName);
+//            System.out.println("descriptor: " + methodLine.getType() + " : " + descriptor);
+            if(!methodLine.getName().equalsIgnoreCase(methodName) || !methodLine.getClazz().equalsIgnoreCase(methodClassName) || !methodLine.getType().equalsIgnoreCase(descriptor))
                 continue;
 
             return true;

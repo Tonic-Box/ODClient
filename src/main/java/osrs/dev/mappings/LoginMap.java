@@ -19,65 +19,73 @@ public class LoginMap
     @Definition(targets = {"Login","Login_username","Login_password","updateGameState"})
     public static void mapLoginUsername(CtMethod method)
     {
-        if(Mappings.findByTag("Login_username") != null)
-            return;
-
-        MethodDefinition definition = new MethodDefinition(method);
-        if(!definition.containsBlockWithValue("Please enter your username/email address."))
-            return;
-
-        Mappings.addClass("Login", method.getDeclaringClass().getName());
-
-        MethodLine updateGameState;
-        FieldLine fieldLine;
-        String username = null;
-        for(CodeBlock block : definition.getBody())
+        try
         {
-            if(block.hasMethodCall("java.lang.String", "trim", "()Ljava/lang/String;"))
+            if(Mappings.findByTag("Login_username") != null)
+                return;
+
+            MethodDefinition definition = new MethodDefinition(method);
+            if(!definition.containsBlockWithValue("Please enter your username/email address."))
+                return;
+
+            Mappings.addClass("Login", method.getDeclaringClass().getName());
+
+            MethodLine updateGameState;
+            FieldLine fieldLine;
+            String username = null;
+            for(CodeBlock block : definition.getBody())
             {
-                fieldLine = block.findFirst(m -> m.getOpcode() == Opcode.GETSTATIC);
-                if(fieldLine != null)
+                if(block.hasMethodCall("java.lang.String", "trim", "()Ljava/lang/String;"))
                 {
-                    Mappings.addField("Login_username", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
-                    username = fieldLine.getName();
+                    fieldLine = block.findFirst(m -> m.getOpcode() == Opcode.GETSTATIC);
+                    if(fieldLine != null)
+                    {
+                        Mappings.addField("Login_username", fieldLine.getName(), fieldLine.getClazz(), fieldLine.getType());
+                        username = fieldLine.getName();
+                    }
                 }
-            }
-            else if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
-            {
-                String finalUsername = username;
-                FieldLine methodLine = block.findFirst(m -> {
-                    if(m.getOpcode() != Opcode.GETSTATIC)
+                else if(block.hasMethodCall("java.lang.String", "length", "()I") && username != null)
+                {
+                    String finalUsername = username;
+                    FieldLine methodLine = block.findFirst(m -> {
+                        if(m.getOpcode() != Opcode.GETSTATIC)
+                            return false;
+
+                        FieldLine line = m.transpose();
+                        return !line.getName().equals(finalUsername);
+                    });
+                    if(methodLine != null)
+                    {
+                        Mappings.addField("Login_password", methodLine.getName(), methodLine.getClazz(), methodLine.getType());
+                    }
+                }
+                else if(block.findFirst(i -> {
+                    if(!(i instanceof ValueLine))
                         return false;
 
-                    FieldLine line = m.transpose();
-                    return !line.getName().equals(finalUsername);
-                });
-                if(methodLine != null)
+                    ValueLine line = i.transpose();
+                    if(!(line.getValue() instanceof Integer))
+                        return false;
+
+                    return ((int)line.getValue()) == 20;
+                }) != null)
                 {
-                    Mappings.addField("Login_password", methodLine.getName(), methodLine.getClazz(), methodLine.getType());
+                    updateGameState = block.findFirst(m -> m instanceof MethodLine);
+                    if(updateGameState == null)
+                        continue;
+
+                    Mappings.addMethod("updateGameState", updateGameState.getName(), updateGameState.getClazz(), updateGameState.getType());
                 }
             }
-            else if(block.findFirst(i -> {
-                if(!(i instanceof ValueLine))
-                    return false;
-
-                ValueLine line = i.transpose();
-                if(!(line.getValue() instanceof Number))
-                    return false;
-
-                return ((int)line.getValue()) == 20;
-            }) != null)
-            {
-                updateGameState = block.findFirst(m -> m instanceof MethodLine);
-                if(updateGameState == null)
-                    continue;
-
-                Mappings.addMethod("updateGameState", updateGameState.getName(), updateGameState.getClazz(), updateGameState.getType());
-            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+            System.exit(0);
         }
     }
 
-    @Definition(targets = {"forceDisconnect","logOut","serverCycle","updateGameState"})
+    @Definition(targets = {"forceDisconnect","logOut","serverCycle"})
     public static void findLogoutStuff(CtMethod method)
     {
         try {
