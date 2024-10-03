@@ -177,12 +177,14 @@ public class LoggerPanel extends JPanel {
                     }
                     else if(input.getText().startsWith("login "))
                     {
+                        System.out.println("?????????????");
                         RSClient client = ClientManager.getClient();
 
                         String data = input.getText().replace("login ", "");
                         String[] parts = data.split(":");
                         client.setUsername(parts[0]);
                         client.setPassword(parts[1]);
+                        client.setGameState(20);
                     }
                     else
                     {

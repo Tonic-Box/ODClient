@@ -13,7 +13,7 @@ import osrs.dev.modder.model.javassist.instructions.FieldLine;
 import osrs.dev.modder.model.javassist.instructions.MethodLine;
 import osrs.dev.modder.model.javassist.instructions.ValueLine;
 
-@MappingSet
+//@MappingSet
 public class LoginMap
 {
     @Definition(targets = {"Login","Login_username","Login_password","updateGameState"})

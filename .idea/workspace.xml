@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="few mapping fixes">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/ClientMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/ClientMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/RandomDatMap.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSRandomDatMixin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/modder/Injector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,16 +45,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="osrs.dev.Main" />
@@ -318,7 +319,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723664999398</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="few mapping fixes">
+      <option name="closed" value="true" />
+      <created>1723666657302</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1723666657302</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

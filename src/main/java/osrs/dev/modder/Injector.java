@@ -196,7 +196,7 @@ public class Injector
         {
             System.out.println("[@FieldHook] " + method.getLongName());
             ex.printStackTrace();
-            System.exit(0);
+            //System.exit(0);
         }
     }
 

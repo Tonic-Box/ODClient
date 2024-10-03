@@ -36,9 +36,9 @@ public class ClientMap
     }
 
     @Definition(targets = {
-            "Client","GameEngine","processServerPacket", "init",
+            "Client","GameEngine","init",
             "JX_ACCESS_TOKEN","JX_REFRESH_TOKEN", "JX_SESSION_ID",
-            "JX_CHARACTER_ID","JX_DISPLAY_NAME", "run",
+            "JX_CHARACTER_ID","run",
             "graphicsTick","clientTick","doCycle","graphicsTick"
     })
     public static void findClient(CtClass clazz)
@@ -56,10 +56,10 @@ public class ClientMap
             findGraphicsTick(gameEngine);
             findRunAndStuff(gameEngine);
             findJagAuthStuff(clazz);
-            for(CtMethod method : clazz.getDeclaredMethods())
-            {
-                findServerPacketReceiver(method);
-            }
+//            for(CtMethod method : clazz.getDeclaredMethods())
+//            {
+//                findServerPacketReceiver(method);
+//            }
         }
         catch (Exception ignored) {
         }
@@ -122,6 +122,7 @@ public class ClientMap
         CtMethod clientTick = null;
         for(int i = 0; i < methods.size(); i++)
         {
+            System.out.println(methods.get(i).getName() + " " + i + " / " + name);
             if(name.equals(methods.get(i).getName()) && descriptor.equals(methods.get(i).getMethodInfo2().getDescriptor()))
             {
                 clientTick = methods.get(i - 1);
@@ -130,7 +131,7 @@ public class ClientMap
         }
         if(clientTick == null)
         {
-            throw new NotFoundException("ClientTick not found");
+            System.err.println("ClientTick not found");
         }
         Mappings.addMethod("clientTick", clientTick.getName(), clazz.getName(), clientTick.getMethodInfo2().getDescriptor());
 
@@ -164,27 +165,27 @@ public class ClientMap
                 continue;
 
             int length = method.getMethodInfo2().getCodeAttribute().getCodeLength();
-            if(length < 420 || length > 475)
+            if(length < 420 || length > 427)
                 continue;
 
             Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
         }
     }
 
-    public static void findServerPacketReceiver(CtMethod method)
-    {
-        try
-        {
-            int len = method.getMethodInfo2().getCodeAttribute().getCodeLength();
-            if(len < 18_000 || len > 22_000)
-                return;
-
-            if(!method.getReturnType().getName().equals("boolean"))
-                return;
-
-            Mappings.addMethod("processServerPacket", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
-        }
-        catch (Exception ignored) {
-        }
-    }
+//    public static void findServerPacketReceiver(CtMethod method)
+//    {
+//        try
+//        {
+//            int len = method.getMethodInfo2().getCodeAttribute().getCodeLength();
+//            if(len < 18_000 || len > 22_000)
+//                return;
+//
+//            if(!method.getReturnType().getName().equals("boolean"))
+//                return;
+//
+//            Mappings.addMethod("processServerPacket", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
+//        }
+//        catch (Exception ignored) {
+//        }
+//    }
 }
