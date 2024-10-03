@@ -77,7 +77,7 @@ public abstract class RSClientMixin extends RSGameEngineMixin implements RSClien
     @Shadow("JX_CHARACTER_ID")
     @Override
     public abstract String getCharacterId();
-    @Shadow(value = "updateGameState", method = true)
-    @Override
-    public abstract void setGameState(int gs);
+//    @Shadow(value = "updateGameState", method = true)
+//    @Override
+//    public abstract void setGameState(int gs);
 }

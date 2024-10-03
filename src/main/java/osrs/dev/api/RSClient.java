@@ -15,7 +15,7 @@ public interface RSClient extends RSGameEngine, AppletStub
     void setUsername(String username);
     void setPassword(String password);
     String getCharacterId();
-    void setGameState(int gs);
+    //void setGameState(int gs);
 
     /**
      * invoke on client thread with return

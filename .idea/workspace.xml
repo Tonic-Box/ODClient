@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="few mapping fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/api/RSClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/ClientMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/ClientMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mappings/LoginMap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/mixins/RSClientMixin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/osrs/dev/ui/LoggerPanel.java" afterDir="false" />
-    </list>
+    <list default="true" id="b3487e23-2754-44ed-8aae-5e42ceef87a8" name="Changes" comment="Partial fix" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -327,7 +319,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723666657302</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Partial fix">
+      <option name="closed" value="true" />
+      <created>1727942990966</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1727942990966</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -342,7 +342,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="mapps client field now. added prelude to a client manager." />
     <MESSAGE value="Added window icon. implemented usable api and a ClientManager that keeps track of the RSClient objects, and also which one is currently visible/tabbed in. Tabbed-out clients now no-op their rendering for cpu usage save." />
     <MESSAGE value="Implemented proper cleanup of closed client objects." />
     <MESSAGE value="Smoothed out tab changed logic a bit" />
@@ -367,6 +366,7 @@
     <MESSAGE value="Cleaned up and redesigned how mapping definitions are written and stored etc. Also now implemented in a way where if a mapping is ever not found that's expected, it will let you know." />
     <MESSAGE value="no-op random.dat read/write" />
     <MESSAGE value="few mapping fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="few mapping fixes" />
+    <MESSAGE value="Partial fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Partial fix" />
   </component>
 </project>

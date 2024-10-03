@@ -122,7 +122,6 @@ public class ClientMap
         CtMethod clientTick = null;
         for(int i = 0; i < methods.size(); i++)
         {
-            System.out.println(methods.get(i).getName() + " " + i + " / " + name);
             if(name.equals(methods.get(i).getName()) && descriptor.equals(methods.get(i).getMethodInfo2().getDescriptor()))
             {
                 clientTick = methods.get(i - 1);
