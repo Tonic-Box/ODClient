@@ -52,7 +52,7 @@ public class CodeUtil
                 String methodDescriptor = constPool.getMethodrefType(ref);
                 mystery = Mappings.getClazz(methodRefClassName);
 
-                CtMethod methodRef = null;
+                CtMethod methodRef;
                 try {
                     methodRef = mystery.getMethod(methodName, methodDescriptor);
                 } catch (Exception ex) {
@@ -90,6 +90,8 @@ public class CodeUtil
      * @param method method
      * @return boolean
      */
+    //suppress warning about Applet
+    @SuppressWarnings("deprecation")
     public static boolean fromSuper(CtMethod method)
     {
         return (
