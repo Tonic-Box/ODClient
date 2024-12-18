@@ -164,7 +164,7 @@ public class ClientMap
                 continue;
 
             int length = method.getMethodInfo2().getCodeAttribute().getCodeLength();
-            if(length < 420 || length > 427)
+            if(length < 375 || length > 425)
                 continue;
 
             Mappings.addMethod("graphicsTick", method.getName(), method.getDeclaringClass().getName(), method.getMethodInfo2().getDescriptor());
